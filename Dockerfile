@@ -4,7 +4,7 @@ ENV HOME /root
 WORKDIR /root
 
 #Install Flask
-RUN pip install flask
+RUN pip install -r requirements.txt
 
 #We are using port 8080
 EXPOSE 8080
