@@ -39,6 +39,12 @@ def images(path):
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = file_Type
     return myResponse
+@app.route("/register")
+def register():
+    myResponse = flask.send_from_directory("public", "register.html")
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = 'text/html'
+    return myResponse
 @app.route("/visit-counter")
 def visits_Counter():
     cookieName = "visits"
