@@ -1,10 +1,14 @@
+# install mongodb: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
 FROM python:latest
 
 ENV HOME /root
 WORKDIR /root
 
 #Install Flask
-RUN pip install flask
+RUN pip install -r requirements.txt
+
+#Run Mongodb
+RUN systemctl start mongod
 
 #We are using port 8080
 EXPOSE 8080

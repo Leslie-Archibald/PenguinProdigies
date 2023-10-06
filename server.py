@@ -1,10 +1,14 @@
 from flask import Flask
 import flask
 import os
+from pymongo import MongoClient
 
 app = Flask(__name__)
 
 directory = directory = os.path.dirname(__file__)
+### CODE FROM https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application ###
+client = MongoClient('localhost', 27017)
+db = client.flask_db
 #relative_Path = flask.Request.path
 #relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
