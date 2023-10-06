@@ -1,20 +1,24 @@
-FROM python:latest
+FROM python:3.8
+RUN apt-get update
 
-ENV HOME /root
-WORKDIR /root
+# set home directory to /root
+ENV HOME /root 
 
-#Install Flask
-RUN pip install flask
+#cd directory
+WORKDIR /root 
 
-#We are using port 8080
+# install extra software (not needed for the homework)
+
+# copy all files into image
+COPY . .
+
+
+# download dependencies
+RUN pip3 install -r requirements.txt
+
+
+# allow port to be accessed
 EXPOSE 8080
 
-#Copy the files
-COPY server.py CSE312/
-COPY pyvenv.cfg CSE312/
-COPY public CSE312/public
-COPY Lib CSE312/Lib/
-COPY Scripts CSE312/Scripts
-
-#Run the server!
-CMD python3 CSE312/server.py
+# run the app 
+CMD python3 -u server.py
