@@ -12,51 +12,91 @@
     <body onload="createLink();">
         <div class="main">
             <div class="banner">
-                <div class="navbar">
-                    <h1>Super Amazing Webpage! :O</h1>
-                    <div id = "cookie-link">
-                        This should be replaced by the javascript!
-                    </div>
-                    <!-- add empty divs for the form-->
-                    <div id="registration"></div>
-                    <div id="login"></div> 
+                <div class="navBar" id="navbar">
+                    <h1 class="title" id="navTitle"> Super Awesome Webpage :O</h1>
+                    <!-- a elements typically used for navbar links -->
+                    <a class="navLinks" href="/cookie-counter" id="firstLink">Cookie Counter</a>
+                    <a class="navLinks" href="register.html">Register</a>
+                    <a class="navLinks" href="login.html">Login</a>
                 </div>
             </div>
-            <div class="userList" id="users">
-                <h3>Users Online</h3>
-                <hr />
-                1
-                2
-                3
-                4
-                5
-                6
-                7
-                8
-                9
-                10
             </div>
-            <div class="chatDiv">
-                this is where chat goes
-                1
-                2
-                3
-                4
-                5
-                6
-                7
-                8
-                9
-                0
-            </div>
+           <div class="pageContents">
+                <div class="users">
+                    <h3>Users Online</h3>
+                    <hr />
+                    <div class="userList">
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                    </div>
 
-
-
-
-
-
-
-
+                </div>
+                <div class="chatDiv">
+                    <div class="chatHistory">
+                        <p>this is where chat goes</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                        <p>person 1</p>
+                    </div>
+                    <hr>
+                    <div class="chatForm">
+                        <label>Chat:
+                            <input id="textBox" type="text">
+                        </label>
+                        <button class="buttons" id="sendMessage" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div> 
         </div>
         <script src="functions.js"></script>
     </body>
