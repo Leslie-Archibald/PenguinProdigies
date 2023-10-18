@@ -3,18 +3,17 @@ FROM python:latest
 ENV HOME /root
 WORKDIR /root
 
+#Copy the files
+COPY . .
+
 #Install Flask
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 #We are using port 8080
 EXPOSE 8080
 
-#Copy the files
-COPY server.py CSE312/
-COPY pyvenv.cfg CSE312/
-COPY public CSE312/public
-COPY Lib CSE312/Lib/
-COPY Scripts CSE312/Scripts
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait 
+RUN chmod +x /wait
 
 #Run the server!
-CMD python3 CSE312/server.py
+CMD /wait && python3 -u server.py
