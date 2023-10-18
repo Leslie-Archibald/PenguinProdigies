@@ -1,9 +1,13 @@
-from flask import Flask
+from flask import Flask, request, render_template
 import flask
 import os
 from pymongo import MongoClient
+import util.authentication as authentication
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
+conn = MongoClient()
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
@@ -46,6 +50,14 @@ def register():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = 'text/html'
     return myResponse
+@app.route("/registeraction", methods = ["POST"])
+def register_Action():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    isValidUsername = authentication.register(username, password, conn['users'])
+    if not isValidUsername:
+        # return render_template('register.html', known_user=True)
+        render_template('errormsg.html', msg='This username is already taken', redirect='/register')
 @app.route("/visit-counter")
 def visits_Counter():
     cookieName = "visits"
