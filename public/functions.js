@@ -12,21 +12,21 @@ function chatMessageHTML(messageJSON) {
 }
 
 function clearChat() {
-    const chatMessages = document.getElementById("chat-messages");
+    const chatMessages = document.getElementById("chatHistory");
     chatMessages.innerHTML = "";
 }
 
 function addMessageToChat(messageJSON) {
-    const chatMessages = document.getElementById("chat-messages");
+    const chatMessages = document.getElementById("chatHistory");
     chatMessages.innerHTML += chatMessageHTML(messageJSON);
     chatMessages.scrollIntoView(false);
     chatMessages.scrollTop = chatMessages.scrollHeight - chatMessages.clientHeight;
 }
 
 function sendPost() {
-    const titleTextBox = document.getElementById("title-text-box");
+    const titleTextBox = document.getElementById("titleBox");
     const title = titleTextBox.value;
-    const descriptionTextBox = document.getElementById("description-text-box");
+    const descriptionTextBox = document.getElementById("messageBox");
     const description = descriptionTextBox.value;
     const request = new XMLHttpRequest();
     request.onreadystatechange = function () {
@@ -55,4 +55,15 @@ function updateChat() {
     }
     request.open("GET", "/chat-history");
     request.send();
+}
+
+function welcome() {
+    document.addEventListener("keypress", function (event) {
+        if (event.code === "Enter") {
+            sendChat();
+        }
+    });
+    
+    updateChat();
+    setInterval(updateChat, 2000);
 }
