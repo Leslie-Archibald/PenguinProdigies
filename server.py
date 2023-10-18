@@ -3,6 +3,7 @@ import flask
 import os
 from pymongo import MongoClient
 
+
 app = Flask(__name__)
 
 directory = directory = os.path.dirname(__file__)
