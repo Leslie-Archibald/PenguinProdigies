@@ -5,7 +5,7 @@ from pymongo import MongoClient
 import util.authentication as authentication
 from flask_bcrypt import Bcrypt
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
 conn = MongoClient()
 
@@ -15,7 +15,8 @@ directory = directory = os.path.dirname(__file__)
 
 @app.route("/")
 def home():
-    myResponse = flask.send_from_directory("public","index.html")
+    # myResponse = flask.send_from_directory("public","index.html")
+    myResponse = render_template('index.html')
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
@@ -60,7 +61,14 @@ def register_Action():
         return render_template('errormsg.html', msg='This username is already taken', redirect='/')
     else:
         return myResponse
-    
+
+@app.route("/login")
+def login():
+    myResponse = flask.send_from_directory("public", "login.html")
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = 'text/html'
+    return myResponse
+
 @app.route("/visit-counter")
 def visits_Counter():
     cookieName = "visits"
