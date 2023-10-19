@@ -54,10 +54,13 @@ def register():
 def register_Action():
     username = request.form.get('username')
     password = request.form.get('password')
-    isValidUsername = authentication.register(username, password, conn['users'])
-    if not isValidUsername:
+    myResponse = authentication.register(username, password, conn['users'])
+    if myResponse == None:
         # return render_template('register.html', known_user=True)
-        render_template('errormsg.html', msg='This username is already taken', redirect='/register')
+        return render_template('errormsg.html', msg='This username is already taken', redirect='/')
+    else:
+        return myResponse
+    
 @app.route("/visit-counter")
 def visits_Counter():
     cookieName = "visits"
