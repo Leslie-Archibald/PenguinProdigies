@@ -26,20 +26,29 @@ function addMessageToChat(messageJSON) {
 function sendPost() {
     const titleTextBox = document.getElementById("titleBox");
     const title = titleTextBox.value;
+    titleTextBox.value = ""
     const descriptionTextBox = document.getElementById("messageBox");
     const description = descriptionTextBox.value;
+    descriptionTextBox.value = ""
+    const username = "Guest"
+    const id = this.crypto.randomUUID();
+    const messageJSON = {"title": title, "username": username, "description": description, "id": id};
+    // $.post({
+    //     url: "chat-message",
+    //     type: "POST",
+    //     contentType: "text/html",
+    //     data: JSON.stringify(messageJSON)
+    // })
     const request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             console.log(this.response);
         }
     }
-    const username = "Guest"
-    const id = this.crypto.randomUUID();
-    const messageJSON = {"title": title, "username": username, "description": description, "id": id};
     request.open("POST", "/chat-message");
     request.send(JSON.stringify(messageJSON));
-    chatTextBox.focus();
+    titleTextBox.focus();
+    descriptionTextBox.focus();
 }
 
 function updateChat() {
@@ -63,7 +72,7 @@ function welcome() {
             sendChat();
         }
     });
-    
+
     updateChat();
     setInterval(updateChat, 2000);
 }
