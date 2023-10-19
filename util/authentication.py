@@ -6,6 +6,7 @@ import random
 def register(username, password, db, bcrypt):
     pass_encrypted = bcrypt.generate_password_hash(password)
     if db.find_one({'username': username}) != None:
+        flask.flash('username taken')
         return None
     cookieName = 'auth'
     if cookieName in flask.request.cookies:
@@ -23,12 +24,12 @@ def register(username, password, db, bcrypt):
 
 def login(username, password, db, bcrypt):
     user = db.find_one({'username': username})
-    if user is None:
-        return False
+    if user == None:
+        return None
     pass_encrypted = user['password']
     is_valid = bcrypt.check_password_hash(pass_encrypted, password)
     if not is_valid:
-        return False
+        return None
     db.update_one({'username': username}, {})
     return True
 

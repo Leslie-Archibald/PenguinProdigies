@@ -1,97 +1,133 @@
-/* Penguin Prodigies StyleSheet  
-   Group Members: 
-    Leslie Archibald
-    Ryan 
-    Soloman
-    Winston Peng
+/* main stylesheet for Penguin Prodigies CSE312 project 
+*   Authors: Leslie (lmarchib), Ryan (rjwu), 
+*            Solomon (solomonr), Winston (wpeng2)
+*/
 
-    Created for CSE312 Project
-    */
-
-.main{
-    width: 100%;
-    height: 100%;
-    position: relative;
+*{ 
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Navbar Styling */
-.banner{
+body{
+    background-color: lightblue;
+}
+
+/* set up flex box stuff */
+.flexbox {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.flexNavBar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: start;
+}
+.flexBoxHor{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: start;
+}
+
+.flexItem {
+    align-self: auto;
+}
+
+
+/*  Navbar styling  */
+
+.banner {
     width: 100%;
     height: 15%;
-    position:fixed;
+    position: fixed;
     top: 0;
-    background: rgb(2, 150, 219);
+    background-color: steelblue;
     align-content: center;
     justify-content: space-around;
 }
 
-#navTitle{
+.navBar {
+    margin-top: 10px;
     width: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
     text-align: center;
+}
+a.navLink{
+    font-size: 20px;
+    color: black;
+}
+
+h1#navTitle {
+    text-align: center;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    font-size: 30px;
     color: black;
     vertical-align: top;
-}
 
-a.navLinks{
-    width: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-top: 10px;
-    margin-right: 10px;
-    margin-left:10px;
-    margin-bottom: 0px;
-    text-align: center;
-    color:black;
 }
-
-#firstLink{
-    margin-left: 0px;
-}
-
 
 /* page contents styling */
-
-.pageContents{
-    width: 100%;
-    position:fixed;
-    background-color: gainsboro;
-    margin-top: 150px;
-    height: 90%;
+hr{
+    color: steelblue;
+}
+.pageContents{ 
+    width: auto;
+    height: auto;
+    max-height: 85%;
+    position: bottom;
+    margin-top: 7%;
+    padding: 20px;
 }
 
-.users{
-    float: left;
+.userDiv{
+    background-color: steelblue;
     width: 35%;
+    min-height: 550px;
+    height: 85%;
+    padding: 10px;
+    margin-right: 10px;
+}
+.user{
+    background-color: whitesmoke;
+    min-height: 550px;
     height: 100%;
-    background-color: #19a7ce; /* change this for better color scheme*/
-    position: relative;
+}
+.userTitle{
+    font-size: 20px;
+    color: black;
+    text-align: center;
+}
+.userList{
+   width: 100%;
 }
 
 .chatDiv{
     float: right;
-    height: 100%;
     width: 60%;
-    background-color: #146c94;
-    position: relative;
+    height: 85%;
+    padding: 10px;
+    background-color: steelblue;
+}
+
+.chat{
+    background-color: whitesmoke;
+    min-height: 550px;
 }
 
 .chatHistory{
-    width: 97.5%;
-    height: 75%;
-    background-color: gainsboro;
-    margin: 10px 10px 10px 10px;
-    overflow-y: scroll;
-
+    padding: 10px;
+    min-height: 450px;
 }
-.chatForm {
-    width: 97.5%;
-    height: 10%;
-    background-color: gainsboro;
-    margin: 10px 10px 10px 10px;
+
+.chatForm{
+    padding: 10px;
+    position: bottom;
 }
