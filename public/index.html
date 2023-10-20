@@ -1,20 +1,53 @@
-<html>
+<!DOCTYPE html>
+<html lang="en-US">
     <head>
+        <!-- meta tags -->
+        <meta charset="UTF-8">
+        <meta name="author" content="Leslie, Ryan, Solomon, Winston">
+        <meta name="description" content="CSE312 project for the group Penguin Prodigies">
+
         <title>Super Epic CSE312 Webpage</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style.css" type="text/css">
     </head>
-    <body onload="createLink();">
-        <div class="main">
-            <div class="banner">
-                <div class="navbar">
-                    <p>Super Amazing Webpage! :O</p>
-                    <div id = "cookie-link">
-                        This should be replaced by the javascript!
-                    </div>
+    <body class="flexBox" onload="createLink();">
+        <div class="flexBox"></div>
+            <div class="banner flexBox">
+                <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
+                <div class="navbar flexNavBar">
+                    <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
+                    <a class="navLink flexItem" href="/register">register</a>
+                    <a class="navLink flexItem" href="/login">login</a>
+                    <a class="navLink flexItem" href="/logout">logout</a>
+                    <a class="navLink flexItem" href="/auctionMain">auction house</a>
                 </div>
             </div>
-            <img class="bg-img" src="images/bg.jpg">
-        </div>
+            <div class="pageContents flexBoxHor">
+                <div class="userDiv flexBox flexItem">
+                    <div class="user"> 
+                        <h3 class="userTitle flexItem">Users Online</h3>
+                        <hr />
+                        <div class="userList">{{username}}</div>
+                    </div>
+                </div>
+                <div class="chatDiv">
+                   <div class="chat">
+                        <div class="chatHistory" id="chatHistory">
+
+                        </div>
+                        <hr />
+                            <div class="chatForm">
+                                <label>Title:
+                                    <input id="titleBox" type="text">
+                                </label>
+                                <label>Message
+                                    <input id="messageBox" type="text">
+                                </label>
+                                <button id="sendMessage"onclick="sendChat()">Send</button>
+                            </div>
+
+                   </div>
+                </div>
+            </div>
         <script src="functions.js"></script>
     </body>
 </html>
