@@ -15,10 +15,21 @@
                 <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
                 <div class="navbar flexNavBar">
                     <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
-                    <a class="navLink flexItem" href="/register">register</a>
-                    <a class="navLink flexItem" href="/login">login</a>
-                    <a class="navLink flexItem" href="/logout">logout</a>
                     <a class="navLink flexItem" href="/auctionMain">auction house</a>
+                    <div class="flexBox" id="userGreeting">
+                        {% if username is defined %}
+                        <a class="navLink flexBoxItem conditionalLink" href="/logout">logout</a>
+                        <br />
+                        <span class="userText"> Welcome {{username}}</span>
+                        {% else %}
+                        <a class="navLink flexItem conditionalLink" href="/register">register</a>
+                        <a class="navLink flexItem conditionalLink" href="/login">login</a>
+                        <br />
+                        <span class="userText"> Welcome Guest!</span>
+                        {% endif %}
+                        
+                    </div>
+                   
                 </div>
             </div>
             <div class="pageContents flexBoxHor">

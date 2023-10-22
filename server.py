@@ -34,6 +34,14 @@ def home_css():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
+@app.route("/formstyles.css")
+def form_css():
+    myResponse = flask.send_from_directory("public","style.css")
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/css"
+    return myResponse
+
+
 @app.route("/functions.js")
 def home_js():
     myResponse = flask.send_from_directory("public","functions.js")
