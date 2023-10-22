@@ -74,6 +74,14 @@ h1#navTitle {
 
 }
 
+.userText{
+    font-size: 20px;
+}
+
+.conditionalLink{
+    margin: 5px 5px 5px
+}
+
 /* page contents styling */
 hr{
     color: steelblue;
@@ -130,4 +138,11 @@ hr{
 .chatForm{
     padding: 10px;
     position: bottom;
+}
+
+.button{
+    text-align: center;
+    color: black;
+    background-color: gainsboro;
+    font-size: 16px;
 }

@@ -14,11 +14,22 @@
             <div class="banner flexBox">
                 <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
                 <div class="navbar flexNavBar">
-                    <a class="navLink flexItem" href="/cookie-counter">cookie counter</a>
-                    <a class="navLink flexItem" href="/register.html">register</a>
-                    <a class="navLink flexItem" href="/login.html">login</a>
+                    <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
                     <a class="navLink flexItem" href="/auctionMain">auction house</a>
-                    <a class="flexItem button" id="logoutButton" onclick="logout()">logout</button> 
+                    <div class="flexBox" id="userGreeting">
+                        {% if username is defined %}
+                        <a class="navLink flexBoxItem conditionalLink" href="/logout">logout</a>
+                        <br />
+                        <span class="userText"> Welcome {{username}}</span>
+                        {% else %}
+                        <a class="navLink flexItem conditionalLink" href="/register">register</a>
+                        <a class="navLink flexItem conditionalLink" href="/login">login</a>
+                        <br />
+                        <span class="userText"> Welcome Guest!</span>
+                        {% endif %}
+                        
+                    </div>
+                   
                 </div>
             </div>
             <div class="pageContents flexBoxHor">
@@ -26,7 +37,7 @@
                     <div class="user"> 
                         <h3 class="userTitle flexItem">Users Online</h3>
                         <hr />
-                        <div class="userList"></div>
+                        <div class="userList">{{username}}</div>
                     </div>
                 </div>
                 <div class="chatDiv">
