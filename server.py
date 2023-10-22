@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, session, make_response, \
 url_for
 import flask
+from flask import request
 import os
 from pymongo import MongoClient
 from flask_bcrypt import Bcrypt
@@ -94,6 +95,10 @@ def visits_Counter():
     myResponse.mimetype = "text/plain; charset=utf-8"
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
+@app.route("/chat-message", methods=['POST'])
+def message():
+    print(request.get_data().decode())
+
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
