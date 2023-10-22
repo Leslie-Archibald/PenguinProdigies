@@ -66,7 +66,13 @@ def visits_Counter():
     return myResponse
 @app.route("/chat-message", methods=['POST'])
 def message():
-    print(request.get_data().decode())
+    if request.method == "POST":
+        data = request.get_json(True)
+        print(data["username"])
+        myResponse = flask.make_response("Message Received")
+        myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+        myResponse.mimetype = "text/plain; charset=utf-8"
+        return myResponse
 
 
 if __name__ == "__main__":
