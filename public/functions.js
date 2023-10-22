@@ -76,3 +76,7 @@ function welcome() {
     updateChat();
     setInterval(updateChat, 2000);
 }
+
+function hitLike() {//WORK HERE!
+    return 0;
+}

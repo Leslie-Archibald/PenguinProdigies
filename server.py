@@ -4,15 +4,18 @@ import flask
 from flask import request
 import os
 from pymongo import MongoClient
-from flask_bcrypt import Bcrypt
+import time
+import json
+#from flask_bcrypt import Bcrypt
 
 import util.authentication as authentication
 import util.constants as constants
 
 app = Flask(__name__, template_folder='public')
-bcrypt = Bcrypt(app)
-client = MongoClient('mongo')
+#bcrypt = Bcrypt(app)
+client = MongoClient('mongo')#change me!!!
 conn = client['cse312']
+chatHistory = conn["chatHistory"] #{UID: 1234, postID: 2345, body: "Hello World!", timePosted: 04:20}
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
@@ -96,9 +99,17 @@ def visits_Counter():
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
 @app.route("/chat-message", methods=['POST'])
-def message():
-    print(request.get_data().decode())
+def message():#posting a new message!
+    msgJSON = json.loads(request.get_data(as_text=True))
+    print(msgJSON["description"])
 
+    timestamp = time.localtime()
+    chatHistory.insert_one({"UID":msgJSON["username"], "postID":msgJSON["id"], "body":msgJSON["description"], "timePosted":timestamp})
+    allChat = chatHistory.find().sort("time")
+    print("got here!")
+    for chat in allChat:
+        print("body is:")
+        print(chat["body"])
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
