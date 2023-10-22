@@ -8,7 +8,7 @@ def numLikes(db_likes,body):
     #returns the total number of likes a certain post has recieved
 
     #These are not real functions, these are just placeholders
-    postID = body.getPostID() 
+    postID = body["id"]
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     numLikes = db_likes.find({"postID":postID}).count()
@@ -17,12 +17,11 @@ def numLikes(db_likes,body):
 
 def likes(db_likes, body):
     #db_likes is the database structure, specifically the table to be used for likes
-    #body is the string(s) containing the user post info like the username
-    #returns the updated number of likes the post has recieved.
+    #body is a dict containing the post information
 
     #These are not real functions, these are just placeholders
-    postID = body.getPostID() 
-    username = body.getUsername()
+    postID = body["id"]
+    username = body["username"]
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     if(db_likes.find({"username":username, "postID":postID}).count <= 0 ):
