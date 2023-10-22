@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, session, make_response, \
-url_for
+url_for, redirect
 import flask
 import os
 from pymongo import MongoClient
@@ -21,16 +21,32 @@ directory = directory = os.path.dirname(__file__)
 def home():
     # myResponse = flask.send_from_directory("public","index.html")
     cookieName = constants.COOKIE_AUTH_TOKEN
+    myResponse = make_response(render_template('index.html'))
     if cookieName in flask.request.cookies:
         authToken = str(flask.request.cookies[cookieName])
-        username = authentication.validate_user(authToken, conn, bcrypt)
-    myResponse = make_response(render_template('index.html'))
+        username = authentication.validate_user(authToken, conn)
+        if username != None:
+            print(url_for('user_Home', user=username))
+            myResponse = make_response(
+                redirect(url_for('user_Home', user=username))
+                )
+            # redirect(url_for('user_Home', user=username))
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
+@app.route("/user/<user>", methods=['POST'])
+def user_Home(user):
+    return render_template('index.html', username=user)
+
 @app.route("/style.css")
 def home_css():
     myResponse = flask.send_from_directory("public","style.css")
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/css"
+    return myResponse
+@app.route('/formstyles.css')
+def form_css():
+    myResponse = flask.send_from_directory('public', 'formstyles.css')
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
@@ -55,7 +71,7 @@ def images(path):
     return myResponse
 @app.route("/register")
 def register():
-    myResponse = flask.send_from_directory("public", "register.html")
+    myResponse = make_response(render_template('register.html'))
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = 'text/html'
     return myResponse
@@ -72,10 +88,21 @@ def register_Action():
 
 @app.route("/login")
 def login():
-    myResponse = flask.send_from_directory("public", "login.html")
+    # myResponse = flask.send_from_directory("public", "login.html")
+    myResponse = make_response(render_template('login.html'))
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = 'text/html'
     return myResponse
+@app.route("/loginaction", methods = ["POST"])
+def login_Action():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    myResponse = authentication.login(username, password, conn, bcrypt)
+    if myResponse == None:
+        # return render_template('register.html', known_user=True)
+        return render_template('errormsg.html', msg='This username is already taken', redirect='/')
+    else:
+        return myResponse
 
 @app.route("/visit-counter")
 def visits_Counter():

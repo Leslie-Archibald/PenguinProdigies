@@ -6,7 +6,7 @@
         <meta author="Leslie, Ryan, Solomon, Winston">
 
         <!-- favicon and stylesheet links -->
-        <link rel="stylesheet" href="formstyles.css" type="text/css">
+        <link rel="stylesheet" href="/formstyles.css" type="text/css">
         
     </head>
     <body>
@@ -26,6 +26,7 @@
                     <h3 class="formTitles" id="loginTitle">Login</h3>
                     <br />
                     <br />
+                    <div style="color: red;">{{error}}</div>
                     <form method="POST" action="/loginaction" class="form">
                         <label for="username" id="usernameLabel" class="formSubItem formLabel">Username:</label>
                         <input type="text" name="username" placeholder="Username" id="usernameInput" class="formSubItem" autofocus>
@@ -35,7 +36,6 @@
                         <br />
                         <button class="formButton" onclick="login()">Login</button>
                     </form>
-                    <div style="color: red;">{{error}}</div>
                 </div>
             </div>
         </div>

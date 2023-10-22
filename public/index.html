@@ -7,7 +7,7 @@
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
         <title>Super Epic CSE312 Webpage</title>
-        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="/style.css" type="text/css">
     </head>
     <body class="flexBox" onload="createLink();">
         <div class="flexBox"></div>
@@ -15,10 +15,14 @@
                 <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
                 <div class="navbar flexNavBar">
                     <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
+                    <a class="navLink flexItem" href="/auctionMain">auction house</a>
+                    {% if username is defined %}
+                    <span>Welcome {{username}}</span>
+                    <a class="navLink flexItem" href="/logout">logout</a>
+                    {% else %}
                     <a class="navLink flexItem" href="/register">register</a>
                     <a class="navLink flexItem" href="/login">login</a>
-                    <a class="navLink flexItem" href="/logout">logout</a>
-                    <a class="navLink flexItem" href="/auctionMain">auction house</a>
+                    {% endif %}
                 </div>
             </div>
             <div class="pageContents flexBoxHor">
@@ -48,6 +52,6 @@
                    </div>
                 </div>
             </div>
-        <script src="functions.js"></script>
+        <script src="/functions.js"></script>
     </body>
 </html>
