@@ -1,21 +1,10 @@
-from flask import Flask, request, render_template, session, make_response, \
-url_for
+from flask import Flask
 import flask
 from flask import request
 import os
 from pymongo import MongoClient
-import time
-import json
-#from flask_bcrypt import Bcrypt
 
-import util.authentication as authentication
-import util.constants as constants
-
-app = Flask(__name__, template_folder='public')
-#bcrypt = Bcrypt(app)
-client = MongoClient('mongo')#change me!!!
-conn = client['cse312']
-chatHistory = conn["chatHistory"] #{UID: 1234, postID: 2345, body: "Hello World!", timePosted: 04:20}
+app = Flask(__name__)
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
@@ -23,12 +12,7 @@ directory = directory = os.path.dirname(__file__)
 
 @app.route("/")
 def home():
-    # myResponse = flask.send_from_directory("public","index.html")
-    cookieName = constants.COOKIE_AUTH_TOKEN
-    if cookieName in flask.request.cookies:
-        authToken = str(flask.request.cookies[cookieName])
-        username = authentication.validate_user(authToken, conn, bcrypt)
-    myResponse = make_response(render_template('index.html'))
+    myResponse = flask.send_from_directory("public","index.html")
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
@@ -63,27 +47,9 @@ def register():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = 'text/html'
     return myResponse
-@app.route("/registeraction", methods = ["POST"])
-def register_Action():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    myResponse = authentication.register(username, password, conn, bcrypt)
-    if myResponse == None:
-        # return render_template('register.html', known_user=True)
-        return render_template('errormsg.html', msg='This username is already taken', redirect='/')
-    else:
-        return myResponse
-
-@app.route("/login")
-def login():
-    myResponse = flask.send_from_directory("public", "login.html")
-    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
-    myResponse.mimetype = 'text/html'
-    return myResponse
-
 @app.route("/visit-counter")
 def visits_Counter():
-    cookieName = constants.COOKIE_VISIT_COUNTER
+    cookieName = "visits"
     if cookieName in flask.request.cookies:
         #There is a visits cookie, so lets increment it by 1
         value = int(flask.request.cookies[cookieName])
@@ -99,17 +65,15 @@ def visits_Counter():
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
 @app.route("/chat-message", methods=['POST'])
-def message():#posting a new message!
-    msgJSON = json.loads(request.get_data(as_text=True))
-    print(msgJSON["description"])
+def message():
+    if request.method == "POST":
+        data = request.get_json(True)
+        print(data["username"])
+        myResponse = flask.make_response("Message Received")
+        myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+        myResponse.mimetype = "text/plain; charset=utf-8"
+        return myResponse
 
-    timestamp = time.localtime()
-    chatHistory.insert_one({"UID":msgJSON["username"], "postID":msgJSON["id"], "body":msgJSON["description"], "timePosted":timestamp})
-    allChat = chatHistory.find().sort("time")
-    print("got here!")
-    for chat in allChat:
-        print("body is:")
-        print(chat["body"])
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
