@@ -35,7 +35,7 @@ function sendPost() {
     // three options: it is empty (unlogged in, / filepath), it is index.html (unlogged in, /index filepath), or it is logged in
     // put this in an if/else statement
     // note: doing it this way is most likely a security risk
-    
+     
 
     const id = this.crypto.randomUUID();
     const messageJSON = {"title": title, "username": username, "description": description, "id": id};
