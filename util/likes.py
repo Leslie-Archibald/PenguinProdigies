@@ -29,7 +29,7 @@ def likes(db_likes, body):
     if(db_likes.find_one({"username":username, "postID":postID}) == None):
         #No likes element exists for this user-post pair
         print("Like added")
-        db_likes.insert({"username":username,
+        db_likes.insert_one({"username":username,
                         "postID":postID})
         
     else: #A user-post pair does exist
@@ -39,11 +39,11 @@ def likes(db_likes, body):
                                 "postID":postID}) )
 
         #removes the like
-        db_likes.delete({"username":username,
+        db_likes.delete_one({"username":username,
                         "postID":postID})
         
         #will probably need to force some kind of update on the client's POV to show that a post has been "unliked"
-        totalLikes = numLikes(db_likes,body)
+    totalLikes = numLikes(db_likes,body)
 
     return totalLikes
 

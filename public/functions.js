@@ -27,7 +27,7 @@ function chatMessageHTML(messageJSON) {
     let messageHTML = "<br><button onclick='deleteMessage(" + title + ")'>X</button> ";
     messageHTML +=  "<span id='" + postID + "'title='" + title + "'><b>" + username + "</b>: " + 
                         description +
-                        "<button className='likeButton' onClick='sendLike("+postID+")'> numLikes = "+numLikes+"</button>" +
+                        "<button className='likeButton' onClick=\"sendLike(\'"+postID+"\')\"> numLikes = "+numLikes+"</button>" +
                     "</span>";
     return messageHTML;
 }

@@ -86,6 +86,7 @@ def meesage_response():
         chat_collection = db["chat"]
         data = request.get_json(True)
         chat_collection.insert_one(data)
+        print(data)
         return myResponse
 
 
