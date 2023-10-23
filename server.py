@@ -3,6 +3,7 @@ import flask
 from flask import request
 import os
 from pymongo import MongoClient
+from bson.json_util import dumps, loads
 
 app = Flask(__name__)
 
@@ -65,14 +66,31 @@ def visits_Counter():
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
 @app.route("/chat-message", methods=['POST'])
-def message():
+def meesage_response():
     if request.method == "POST":
-        data = request.get_json(True)
-        print(data["username"])
         myResponse = flask.make_response("Message Received")
         myResponse.headers['X-Content-Type-Options'] = 'nosniff'
         myResponse.mimetype = "text/plain; charset=utf-8"
+        mongo_client = MongoClient("localhost")
+        db = mongo_client["cse312"]
+        chat_collection = db["chat"]
+        data = request.get_json(True)
+        chat_collection.insert_one(data)
         return myResponse
+
+
+@app.route("/chat-history", methods=['GET'])
+def history_response():
+    mongo_client = MongoClient("localhost")
+    db = mongo_client["cse312"]
+    chat_collection = db["chat"]
+    chat_cur = chat_collection.find({})
+    json_data = dumps(chat_cur)
+    response = flask.make_response(json_data.encode())
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.mimetype = "applicaton/json; charset=utf-8"
+    return response
+    
 
 
 if __name__ == "__main__":
