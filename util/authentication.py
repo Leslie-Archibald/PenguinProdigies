@@ -2,6 +2,7 @@ import flask
 from flask import make_response, render_template, redirect, url_for
 import random
 import util.constants as constants
+import hashlib
 
 # use of flask_bcrypt from https://www.geeksforgeeks.org/password-hashing-with-bcrypt-in-flask/
 def register(username, password, conn, bcrypt):
@@ -20,9 +21,11 @@ def register(username, password, conn, bcrypt):
     #     return None
     else:
         auth = generate_auth_token(response)
+        m = hashlib.sha256()
+        m.update(auth.encode())
         db.insert_one({'username': username, 
                     'password': pass_encrypted, 
-                    'auth': hash(auth)}
+                    'auth': m.digest()}
                     )
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = 'text/html; charset=utf-8; HttpOnly'
@@ -42,7 +45,9 @@ def login(username, password, conn, bcrypt):
         redirect(url_for('user_Home', user=username), code=307)
         )
     auth = generate_auth_token(response)
-    db.update_one({'username': username}, {"$set": {'auth': hash(auth)}})
+    m = hashlib.sha256()
+    m.update(auth.encode())
+    db.update_one({'username': username}, {"$set": {'auth': m.digest()}})
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = 'text/html; charset=utf-8; HttpOnly'
     return response
@@ -58,9 +63,10 @@ def get_user(conn):
     authToken = flask.request.cookies.get(cookieName)
     if authToken == None:
         return None
-    authToken = str(authToken)
     db = conn[constants.DB_USERS]
-    user = db.find_one({'auth': hash(authToken)})
+    m = hashlib.sha256()
+    m.update(authToken.encode())
+    user = db.find_one({'auth': m.digest()})
     if user == None:
         return None
     else:

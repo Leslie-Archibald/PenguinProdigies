@@ -10,8 +10,8 @@ import util.constants as constants
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('mongo')
-client = MongoClient('localhost')
+client = MongoClient('mongo')
+# client = MongoClient('localhost')
 conn = client['cse312']
 
 directory = directory = os.path.dirname(__file__)
