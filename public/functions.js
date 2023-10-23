@@ -2,12 +2,33 @@ function createLink(){
     document.getElementById("cookie-link").innerHTML = "<ul><li><a href='http://localhost:8080/visit-counter'>Click here to see the /visit-counter page!</a></li></ul>"
 }
 
+function sendLike(postID){
+    console.log("Got here!!!")
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            clearChat();
+            const messages = JSON.parse(this.response);
+            for (const message of messages) {
+                addMessageToChat(message);
+            }
+        }
+    }
+    request.open("POST", "/like-message");
+    request.send(postID);
+}
+
 function chatMessageHTML(messageJSON) {
     const username = messageJSON["username"]
     const title = messageJSON["title"];
+    const postID = messageJSON["id"];
     const description = messageJSON["description"];
+    const numLikes = messageJSON["numLikes"];
     let messageHTML = "<br><button onclick='deleteMessage(" + title + ")'>X</button> ";
-    messageHTML += "<span id='message_" + title + "'><b>" + username + "</b>: " + description + "</span>";
+    messageHTML +=  "<span id='" + postID + "'title='" + title + "'><b>" + username + "</b>: " + 
+                        description +
+                        "<button className='likeButton' onClick='sendLike("+postID+")'> numLikes = "+numLikes+"</button>" +
+                    "</span>";
     return messageHTML;
 }
 

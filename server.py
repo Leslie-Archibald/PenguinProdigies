@@ -1,9 +1,11 @@
-from flask import Flask
+from flask import Flask, request, render_template, session, make_response, url_for, redirect
 import flask
 from flask import request
 import os
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
+from util.likes import *
+import json
 
 app = Flask(__name__)
 
@@ -11,9 +13,17 @@ directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
 #relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
+app = Flask(__name__, template_folder='public')
+# client = MongoClient('mongo')
+mongo_client = MongoClient("localhost")
+db = mongo_client["cse312"]
+chat_collection = db["chat"]
+likes_collection = db["likes"]
+
 @app.route("/")
 def home():
-    myResponse = flask.send_from_directory("public","index.html")
+    myResponse = make_response(render_template('index.html'))
+    #myResponse = flask.send_from_directory("public","index.html")
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
@@ -81,17 +91,34 @@ def meesage_response():
 
 @app.route("/chat-history", methods=['GET'])
 def history_response():
-    mongo_client = MongoClient("localhost")
-    db = mongo_client["cse312"]
-    chat_collection = db["chat"]
     chat_cur = chat_collection.find({})
-    json_data = dumps(chat_cur)
+    temp = "["
+    for chat in chat_cur:
+        #print("Chat =")
+        
+        username = chat["username"]
+        postID = chat["id"]
+        chat["numLikes"] = numLikes(likes_collection, {"username":username,"id":postID} )
+        #print(dumps(chat))
+        temp += dumps(chat)
+        temp += ", "
+    temp = temp.strip(", ")
+    temp += "]"
+    json_data = temp
+    #print(json_data)
     response = flask.make_response(json_data.encode())
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "applicaton/json; charset=utf-8"
     return response
+@app.route("/like-message", methods=["POST"])
+def like_response():
+    print("Like recieved!")
+    username = "Guest"
+    postID = request.get_data(as_text=True)
+    print("PostID is:", postID)
+    totalLikes = likes(likes_collection,{"username":username,"id":postID} )
+    return(history_response() )
+
     
-
-
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)

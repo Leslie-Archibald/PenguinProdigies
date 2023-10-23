@@ -6,6 +6,8 @@
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
+        {% set chatHistory = '' %}
+
         <title>Super Epic CSE312 Webpage</title>
         <link rel="stylesheet" href="style.css" type="text/css">
     </head>
@@ -34,7 +36,7 @@
                 <div class="chatDiv">
                    <div class="chat">
                         <div class="chatHistory" id="chatHistory">
-
+                            {{chatHistory}}
                         </div>
                         <hr />
                         <div class="chatForm">
