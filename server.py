@@ -12,9 +12,11 @@ from util.likes import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-client = MongoClient('mongo')
 # client = MongoClient('localhost')
+client = MongoClient('mongo')
 conn = client['cse312']
+chat_collection = conn["chat"]
+likes_collection = conn["likes"]
 
 
 directory = directory = os.path.dirname(__file__)
@@ -56,7 +58,7 @@ def form_css():
     myResponse.mimetype = "text/css"
     return myResponse
 
-
+@app.route("/user/functions.js")
 @app.route("/functions.js")
 def home_js():
     myResponse = flask.send_from_directory("public","functions.js")
@@ -134,16 +136,13 @@ def visits_Counter():
     myResponse.mimetype = "text/plain; charset=utf-8"
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
-@app.route("/chat-message", methods=['POST'])
-def meesage_response():
+@app.route("/chat-message", methods = ['GET', "POST"])
+def message_response():
     if request.method == "POST":
         myResponse = flask.make_response("Message Received")
         myResponse.headers['X-Content-Type-Options'] = 'nosniff'
         myResponse.mimetype = "text/plain; charset=utf-8"
 
-        mongo_client = MongoClient("localhost")
-        db = mongo_client["cse312"]
-        chat_collection = db["chat"]
         data = request.get_json(True)
 
         message = data["description"]
@@ -177,7 +176,7 @@ def history_response():
     temp = temp.strip(", ")
     temp += "]"
     json_data = temp
-    #print(json_data)
+    print(json_data)
     response = flask.make_response(json_data.encode())
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "applicaton/json; charset=utf-8"
@@ -185,7 +184,7 @@ def history_response():
 @app.route("/like-message", methods=["POST"])
 def like_response():
     print("Like recieved!")
-    username = "Guest"
+    username = authentication.get_user(conn)
     postID = request.get_data(as_text=True)
     print("PostID is:", postID)
     totalLikes = likes(likes_collection,{"username":username,"id":postID} )
