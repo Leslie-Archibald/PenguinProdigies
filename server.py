@@ -12,8 +12,8 @@ from util.likes import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-client = MongoClient('mongo')
 # client = MongoClient('localhost')
+client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
@@ -176,7 +176,7 @@ def history_response():
     temp = temp.strip(", ")
     temp += "]"
     json_data = temp
-    #print(json_data)
+    print(json_data)
     response = flask.make_response(json_data.encode())
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "applicaton/json; charset=utf-8"

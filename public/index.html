@@ -39,7 +39,7 @@
                     <div class="user"> 
                         <h3 class="userTitle flexItem">Users Online</h3>
                         <hr />
-                        <div class="userList">{{username}}</div>
+                        <div class="userList" id="userid">{{username}}</div>
                     </div>
                 </div>
                 <div class="chatDiv">
@@ -55,7 +55,11 @@
                             <label>Message
                                 <input id="messageBox" type="text">
                             </label>
+                            {% if username is defined %}
                             <button id="sendMessage"onclick="sendPost()">Send</button>
+                            {% else %}
+                            <button id="sendMessage">Send</button>
+                            {% endif %}
                         </div>
 
                    </div>
