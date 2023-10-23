@@ -18,7 +18,7 @@ directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
 #relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def home():
     # myResponse = flask.send_from_directory("public","index.html")
     myResponse = make_response(render_template('index.html'))
@@ -76,7 +76,7 @@ def images(path):
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = file_Type
     return myResponse
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     myResponse = make_response(render_template('register.html'))
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
@@ -107,7 +107,7 @@ def login_Action():
     myResponse = authentication.login(username, password, conn, bcrypt)
     if myResponse == None:
         # return render_template('register.html', known_user=True)
-        return render_template('errormsg.html', msg='This username is already taken', redirect='/')
+        return render_template('login.html', error='incorrect username or password')
     else:
         return myResponse
 

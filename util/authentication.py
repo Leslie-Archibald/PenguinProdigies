@@ -11,10 +11,12 @@ def register(username, password, conn, bcrypt):
     pass_encrypted = bcrypt.generate_password_hash(password).decode()
     response = make_response(
     # code 303 is for redirects after POST requests
-        redirect(url_for('user_Home', user=username), code=307)
+        # redirect(url_for('user_Home', user=username), code=307)
+        redirect('/', code=307)
         )
     if db.find_one({'username': username}) != None:
         response = make_response(
+            # redirect(url_for('register', error='username taken'), code=307)
             render_template('register.html', error='username taken')
             )
     # if cookieName in flask.request.cookies:
@@ -45,8 +47,8 @@ def login(username, password, conn, bcrypt):
         redirect(url_for('user_Home', user=username), code=307)
         )
     auth = generate_auth_token(response)
-    # cookieName = constants.COOKIE_AUTH_TOKEN
-    # response.set_cookie(cookieName, auth, max_age=69420)
+    cookieName = constants.COOKIE_AUTH_TOKEN
+    response.set_cookie(cookieName, auth, max_age=69420)
     m = hashlib.sha256()
     m.update(auth.encode())
     db.update_one({'username': username}, {"$set": {'auth': m.digest()}})
@@ -56,8 +58,8 @@ def login(username, password, conn, bcrypt):
 
 def generate_auth_token(response):
     auth = str(random.random())
-    cookieName = constants.COOKIE_AUTH_TOKEN
-    response.set_cookie(cookieName, auth, max_age=69420)
+    # cookieName = constants.COOKIE_AUTH_TOKEN
+    # response.set_cookie(cookieName, auth, max_age=69420)
     return auth
 
 def get_user(conn):
