@@ -7,7 +7,7 @@
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
         <title>Super Epic CSE312 Webpage</title>
-        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="/style.css" type="text/css">
     </head>
 
     <body onload="welcome();">
@@ -17,10 +17,19 @@
             <div class="banner flexBox">
                 <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
                 <div class="navbar flexNavBar">
-                    <a class="navLink flexItem">cookie counter</a>
-                    <a class="navLink flexItem">register</a>
-                    <a class="navLink flexItem">login</a>
-                    <a class="navLink flexItem">auction house</a>
+                    <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
+                    <a class="navLink flexItem" href="/auctionMain">auction house</a>
+                    <div class="flexBox" id="userGreeting">
+                        {% if username is defined %}
+                        <a class="navLink flexBoxItem conditionalLink" href="/logout">logout</a>
+                        <br />
+                        <span class="userText"> Welcome {{username}}</span>
+                        {% else %}
+                        <a class="navLink flexItem conditionalLink" href="/register">register</a>
+                        <a class="navLink flexItem conditionalLink" href="/login">login</a>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
             <div class="pageContents flexBoxHor">
@@ -28,7 +37,7 @@
                     <div class="user"> 
                         <h3 class="userTitle flexItem">Users Online</h3>
                         <hr />
-                        <div class="userList"></div>
+                        <div class="userList">{{username}}</div>
                     </div>
                 </div>
                 <div class="chatDiv">
