@@ -42,21 +42,33 @@ def login(username, password, conn, bcrypt):
         redirect(url_for('user_Home', user=username), code=307)
         )
     auth = generate_auth_token(response)
-    db.update_one({'username': username}, {'auth': hash(auth)})
+    db.update_one({'username': username}, {"$set": {'auth': hash(auth)}})
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = 'text/html; charset=utf-8; HttpOnly'
     return response
 
 def generate_auth_token(response):
-    auth = random.random()
+    auth = str(random.random())
     cookieName = constants.COOKIE_AUTH_TOKEN
-    response.set_cookie(cookieName, str(auth), max_age=69420)
+    response.set_cookie(cookieName, auth, max_age=69420)
     return auth
 
-def validate_user(authToken, conn):
+def get_user(conn):
+    cookieName = constants.COOKIE_AUTH_TOKEN
+    authToken = flask.request.cookies.get(cookieName)
+    if authToken == None:
+        return None
+    authToken = str(authToken)
     db = conn[constants.DB_USERS]
     user = db.find_one({'auth': hash(authToken)})
     if user == None:
         return None
     else:
         return user['username']
+
+def logout(conn, authToken):
+    db = conn[constants.DB_USERS]
+    response = make_response(redirect('/'))
+    response.set_cookie('auth', '', max_age=0)
+    db.update_one({'auth': hash(authToken)}, {"$pull": {'auth': hash(authToken)}})
+    return response

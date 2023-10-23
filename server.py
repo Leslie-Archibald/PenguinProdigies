@@ -10,7 +10,8 @@ import util.constants as constants
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-client = MongoClient('mongo')
+# client = MongoClient('mongo')
+client = MongoClient('localhost')
 conn = client['cse312']
 
 directory = directory = os.path.dirname(__file__)
@@ -20,23 +21,28 @@ directory = directory = os.path.dirname(__file__)
 @app.route("/")
 def home():
     # myResponse = flask.send_from_directory("public","index.html")
-    cookieName = constants.COOKIE_AUTH_TOKEN
     myResponse = make_response(render_template('index.html'))
-    if cookieName in flask.request.cookies:
-        authToken = str(flask.request.cookies[cookieName])
-        username = authentication.validate_user(authToken, conn)
-        if username != None:
-            print(url_for('user_Home', user=username))
-            myResponse = make_response(
-                redirect(url_for('user_Home', user=username))
-                )
-            # redirect(url_for('user_Home', user=username))
+    username = authentication.get_user(conn)
+    print('----- this the username i got back from token --------', 
+          username, 
+          hash(flask.request.cookies.get(constants.COOKIE_AUTH_TOKEN)))
+    if username != None:
+        myResponse = make_response(
+            redirect(url_for('user_Home', user=username))
+            )
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
+    print('printing database')
+    for i in conn[constants.DB_USERS].find({}):
+        print(i)
     return myResponse
-@app.route("/user/<user>", methods=['POST'])
+@app.route("/user/<user>", methods = ['GET', 'POST'])
 def user_Home(user):
-    return render_template('index.html', username=user)
+    if authentication.get_user(conn) == user:
+        return render_template('index.html', username=user)
+    else:
+        return render_template('errormsg.html', 
+                               msg='token not found --invalid access')
 
 @app.route("/style.css")
 def home_css():
@@ -103,6 +109,11 @@ def login_Action():
         return render_template('errormsg.html', msg='This username is already taken', redirect='/')
     else:
         return myResponse
+
+@app.route('/logout')
+def logout():
+    resp = authentication.logout(conn, flask.request.cookies.get('auth'))
+    return resp
 
 @app.route("/visit-counter")
 def visits_Counter():
