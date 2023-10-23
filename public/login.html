@@ -15,8 +15,8 @@
             <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
           <div class="navbar flexNavBar">
                 <a class="navLink flexItem" href="/cookie-counter">cookie counter</a>
-                <a class="navLink flexItem" href="/register.html">register</a>
-                <a class="navLink flexItem" href="/login.html">login</a>
+                <a class="navLink flexItem" href="/register">register</a>
+                <a class="navLink flexItem" href="/login">login</a>
                 <a class="navLink flexItem" href="/auctionMain">auction house</a>
             </div> 
         </div>
@@ -26,6 +26,7 @@
                     <h3 class="formTitles" id="loginTitle">Login</h3>
                     <br />
                     <br />
+                    <div style="color: red;">{{error}}</div>
                     <form method="POST" action="/loginaction" class="form">
                         <label for="username" id="usernameLabel" class="formSubItem formLabel">Username:</label>
                         <input type="text" name="username" placeholder="Username" id="usernameInput" class="formSubItem" autofocus>
@@ -35,7 +36,6 @@
                         <br />
                         <button class="formButton" onclick="login()">Login</button>
                     </form>
-                    <div style="color: red;">{{error}}</div>
                 </div>
             </div>
         </div>

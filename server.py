@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, session, make_response, \
-url_for
+url_for, redirect
 import flask
 import os
 from pymongo import MongoClient
@@ -11,6 +11,7 @@ import util.constants as constants
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
 client = MongoClient('mongo')
+# client = MongoClient('localhost')
 conn = client['cse312']
 
 directory = directory = os.path.dirname(__file__)
@@ -20,27 +21,41 @@ directory = directory = os.path.dirname(__file__)
 @app.route("/")
 def home():
     # myResponse = flask.send_from_directory("public","index.html")
-    cookieName = constants.COOKIE_AUTH_TOKEN
-    if cookieName in flask.request.cookies:
-        authToken = str(flask.request.cookies[cookieName])
-        username = authentication.validate_user(authToken, conn, bcrypt)
     myResponse = make_response(render_template('index.html'))
+    username = authentication.get_user(conn)
+    print('----- this the username i got back from token --------', 
+          username, 
+          hash(flask.request.cookies.get(constants.COOKIE_AUTH_TOKEN)))
+    if username != None:
+        myResponse = make_response(
+            redirect(url_for('user_Home', user=username))
+            )
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
+    print('printing database')
+    for i in conn[constants.DB_USERS].find({}):
+        print(i)
     return myResponse
+@app.route("/user/<user>", methods = ['GET', 'POST'])
+def user_Home(user):
+    if authentication.get_user(conn) == user:
+        return render_template('index.html', username=user)
+    else:
+        return render_template('errormsg.html', 
+                               msg='token not found --invalid access')
+
 @app.route("/style.css")
 def home_css():
     myResponse = flask.send_from_directory("public","style.css")
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
-@app.route("/formstyles.css")
+@app.route('/formstyles.css')
 def form_css():
-    myResponse = flask.send_from_directory("public","style.css")
+    myResponse = flask.send_from_directory('public', 'formstyles.css')
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
-
 
 @app.route("/functions.js")
 def home_js():
@@ -63,7 +78,7 @@ def images(path):
     return myResponse
 @app.route("/register")
 def register():
-    myResponse = flask.send_from_directory("public", "register.html")
+    myResponse = make_response(render_template('register.html'))
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = 'text/html'
     return myResponse
@@ -80,10 +95,26 @@ def register_Action():
 
 @app.route("/login")
 def login():
-    myResponse = flask.send_from_directory("public", "login.html")
+    # myResponse = flask.send_from_directory("public", "login.html")
+    myResponse = make_response(render_template('login.html'))
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = 'text/html'
     return myResponse
+@app.route("/loginaction", methods = ["POST"])
+def login_Action():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    myResponse = authentication.login(username, password, conn, bcrypt)
+    if myResponse == None:
+        # return render_template('register.html', known_user=True)
+        return render_template('errormsg.html', msg='This username is already taken', redirect='/')
+    else:
+        return myResponse
+
+@app.route('/logout')
+def logout():
+    resp = authentication.logout(conn, flask.request.cookies.get('auth'))
+    return resp
 
 @app.route("/visit-counter")
 def visits_Counter():
