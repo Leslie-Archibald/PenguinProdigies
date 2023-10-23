@@ -7,7 +7,7 @@ function chatMessageHTML(messageJSON) {
     const title = messageJSON["title"];
     const description = messageJSON["description"];
     let messageHTML = "<br><button onclick='deleteMessage(" + title + ")'>X</button> ";
-    messageHTML += "<span id='message_" + title + "'><b>" + username + "</b>: " + description + "</span>";
+    messageHTML += "<span id='message_" + title + "'><b>" + title + "by:" + username + "</b>: " + description + "</span>";
     return messageHTML;
 }
 
