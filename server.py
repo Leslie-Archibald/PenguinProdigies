@@ -82,6 +82,12 @@ def meesage_response():
         message = message.replace("<", "&lt;")
         message = message.replace(">", "&gt;")
         data["description"] = message
+
+        title = data["title"]
+        title = title.replace("&", "&amp;")
+        title = title.replace("<", "&lt;")
+        title = title.replace(">", "&gt;")
+        data["title"] = title
         
         chat_collection.insert_one(data)
         return myResponse
@@ -92,7 +98,7 @@ def history_response():
     chat_collection = db["chat"]
     chat_cur = chat_collection.find({})
     json_data = dumps(chat_cur)
-    
+
     response = flask.make_response(json_data.encode())
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "applicaton/json; charset=utf-8"
