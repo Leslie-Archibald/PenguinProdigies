@@ -81,15 +81,27 @@ def meesage_response():
         myResponse = flask.make_response("Message Received")
         myResponse.headers['X-Content-Type-Options'] = 'nosniff'
         myResponse.mimetype = "text/plain; charset=utf-8"
+
         mongo_client = MongoClient("localhost")
         db = mongo_client["cse312"]
         chat_collection = db["chat"]
         data = request.get_json(True)
+
+        message = data["description"]
+        message = message.replace("&", "&amp;")
+        message = message.replace("<", "&lt;")
+        message = message.replace(">", "&gt;")
+        data["description"] = message
+
+        title = data["title"]
+        title = title.replace("&", "&amp;")
+        title = title.replace("<", "&lt;")
+        title = title.replace(">", "&gt;")
+        data["title"] = title
+        
         chat_collection.insert_one(data)
         print(data)
         return myResponse
-
-
 @app.route("/chat-history", methods=['GET'])
 def history_response():
     chat_cur = chat_collection.find({})
