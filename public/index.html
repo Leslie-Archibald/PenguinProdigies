@@ -46,14 +46,31 @@
 
                         </div>
                         <hr />
-                            <div class="chatForm">
-                                <label>Title:
-                                    <input id="titleBox" type="text">
+                            <div class="chatFormDiv">
+                               <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
+                                <label for="itemName" class="formLabels">Title:
+                                    <input type="text" id="itemName">
+                                </label> 
+                                <label for="itemDescription" class="formLabels">Description:
+                                    <input type="text" id="itemDescription">
                                 </label>
-                                <label>Message
-                                    <input id="messageBox" type="text">
+                                <label for="itemFile" class="formLabels">
+                                    <input type="file" name="upload" id="itemFile">
                                 </label>
-                                <button id="sendMessage"onclick="sendChat()">Send</button>
+                                <label for="startingBid" class="formLabels">
+                                    <input type="text" id="startingBid">
+                                </label>
+                                <label for="bidTime1">1 minute
+                                    <input type="radio" id="bidTime1">
+                                </label>
+                                <label for="bidTime5" class="formLabels">5 minutes
+                                    <input type="radio" id="bidTime5">
+                                </label>
+                                <label for="bidTime10" class="formLabels">10 minutes
+                                    <input type="radio" id="bidTime10">
+                                </label>
+                                <input type="submit" value="Post">
+                               </form>
                             </div>
 
                    </div>
