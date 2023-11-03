@@ -7,9 +7,11 @@ from flask_bcrypt import Bcrypt
 
 import util.authentication as authentication
 import util.constants as constants
+import flask_socketio
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
+socket = flask_socketio.SocketIO(app)
 client = MongoClient('mongo')
 conn = client['cse312']
 
@@ -102,6 +104,14 @@ def visits_Counter():
     myResponse.mimetype = "text/plain; charset=utf-8"
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
+
+@app.route("/auction-div", methods=['POST'])
+def handle_multipart():
+    buff = request._get_stream_for_parsing()
+    buff = buff.read()
+    print(buff)
+    
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
