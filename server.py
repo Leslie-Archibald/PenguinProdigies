@@ -94,7 +94,6 @@ def register_Action():
         return render_template('errormsg.html', msg='This username is already taken', redirect='/')
     else:
         return myResponse
-
 @app.route("/login")
 def login():
     # myResponse = flask.send_from_directory("public", "login.html")
@@ -112,13 +111,10 @@ def login_Action():
         return render_template('login.html', error='incorrect username or password')
     else:
         return myResponse
-
 @app.route('/logout')
 def logout():
     resp = authentication.logout(conn, flask.request.cookies.get('auth'))
     return resp
-
-
 @app.route("/visit-counter")
 def visits_Counter():
     cookieName = "visits"
@@ -189,7 +185,12 @@ def like_response():
     print("PostID is:", postID)
     totalLikes = likes(likes_collection,{"username":username,"id":postID} )
     return(history_response() )
-
+@app.route("/auction-div",methods=["POST"])
+def auction_Response():
+    #IMG HANDLING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    img = request.get_json()["itemFile"]
+    myResponse = make_response()
+    return myResponse
     
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
