@@ -43,3 +43,6 @@ def validate_user(authToken, db):
         return None
     else:
         return user['username']
+    
+def auction(data, conn):
+    print(data)
