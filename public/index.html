@@ -15,12 +15,12 @@
                 <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
                 <div class="navbar flexNavBar">
                     <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
-                    <a class="navLink flexItem" href="/auctionMain">auction house</a>
                     <div class="flexBox" id="userGreeting">
                         {% if username is defined %}
                         <a class="navLink flexBoxItem conditionalLink" href="/logout">logout</a>
                         <br />
                         <span class="userText"> Welcome {{username}}</span>
+                        <a class="navLink flexItem conditionalLink" href="/profile">{{username}}'s profile</a>
                         {% else %}
                         <a class="navLink flexItem conditionalLink" href="/register">register</a>
                         <a class="navLink flexItem conditionalLink" href="/login">login</a>
@@ -33,11 +33,46 @@
                 </div>
             </div>
             <div class="pageContents flexBoxHor">
-                <div class="userDiv flexBox flexItem">
-                    <div class="user"> 
-                        <h3 class="userTitle flexItem">Users Online</h3>
-                        <hr />
-                        <div class="userList">{{username}}</div>
+                <div class="formDiv flexBox flexItem">
+                    <div class="auctionForm"> 
+                        <br />
+                        <br />
+                        <h3 id="formTite">Make an Auction!</h3>
+                        <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
+                            
+                            <label for="itemName" class="formLabels">Title:      
+                                <input type="text" id="itemName" name="item" class="formInput">
+                            </label>
+                            <br />
+                            <label for="itemDescription" class="formLabels">Description: 
+                                <input type="text" id="itemDescription" name="description" class="formInput">  
+                            </label>
+                            <br />
+                            <label for="startingBid" class="formLabels">Starting Bid:
+                                <input type="text" id="startingBid" name="bid" class="formInput">
+                            </label>
+                            <br />
+                            <br />
+                            <br />
+                            <h3 id="timeTitle">Auction Time</h3>
+                            <label for="bidTime1" class="formLabels"> 1 minute:
+                                <input type="radio" id="bidTime1" class="radioButton" name="time" >
+                            </label>
+                            <br>
+                            <label for="bidTime5" class="formLabels">5 minutes:
+                                <input type="radio" id="bidTime5" class="radioButton" name="time">
+                            </label>
+                            <br> 
+                            <label for="bidTime10" class="formLabels">10 minutes:
+                                <input type="radio" id="bidTime10" class="radioButton" name="time">
+                            </label>
+                            <br />
+                            <br />
+                            <label for="itemFile" class="formLabels">
+                                <input type="file" name="upload" id="itemFile">
+                            </label>
+                            <input type="submit" value="Post" id="formButton">
+                        </form>
                     </div>
                 </div>
                 <div class="chatDiv">
@@ -45,34 +80,6 @@
                         <div class="chatHistory" id="chatHistory">
 
                         </div>
-                        <hr />
-                            <div class="chatFormDiv">
-                               <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
-                                <label for="itemName" class="formLabels">Title:
-                                    <input type="text" id="itemName">
-                                </label> 
-                                <label for="itemDescription" class="formLabels">Description:
-                                    <input type="text" id="itemDescription">
-                                </label>
-                                <label for="itemFile" class="formLabels">
-                                    <input type="file" name="upload" id="itemFile">
-                                </label>
-                                <label for="startingBid" class="formLabels">
-                                    <input type="text" id="startingBid">
-                                </label>
-                                <label for="bidTime1">1 minute
-                                    <input type="radio" id="bidTime1">
-                                </label>
-                                <label for="bidTime5" class="formLabels">5 minutes
-                                    <input type="radio" id="bidTime5">
-                                </label>
-                                <label for="bidTime10" class="formLabels">10 minutes
-                                    <input type="radio" id="bidTime10">
-                                </label>
-                                <input type="submit" value="Post">
-                               </form>
-                            </div>
-
                    </div>
                 </div>
             </div>
