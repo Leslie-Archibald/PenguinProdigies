@@ -190,6 +190,15 @@ def like_response():
     totalLikes = likes(likes_collection,{"username":username,"id":postID} )
     return(history_response() )
 
+@app.route("/auction-div", methods = ["POST"])
+def auction_form_response():
+    files = request.files
+    data = request.form
+    print('form data', data)
+    print('form files', files)
+    # img = data['upload']
+    return flask.send_from_directory("public", "login.html")
+
     
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
