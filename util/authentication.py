@@ -3,6 +3,8 @@ from flask import make_response, render_template
 import random
 import util.constants as constants
 
+allowed_extensisons = {'png', 'jpg', 'jpeg'}
+
 # use of flask_bcrypt from https://www.geeksforgeeks.org/password-hashing-with-bcrypt-in-flask/
 def register(username, password, conn, bcrypt):
     db = conn[constants.DB_USERS]
@@ -44,5 +46,5 @@ def validate_user(authToken, db):
     else:
         return user['username']
     
-def auction(data, conn):
-    print(data)
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit(',', 1)[1].lower() in allowed_extensisons

@@ -11,8 +11,10 @@ import util.parse as parse
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-client = MongoClient('mongo')
+client = MongoClient('localhost')
 conn = client['cse312']
+upload_folder = 'public/images'
+allowed_extensisons = {'png', 'jpg', 'jpeg'}
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
@@ -106,30 +108,19 @@ def visits_Counter():
 
 @app.route("/auction-div", methods=['POST'])
 def handle_multipart():
-    data = {}
-
     buff = request._get_stream_for_parsing()
     buff = buff.read()
-    count = 0
     boundary = "--" + request.headers["Content-Type"].split()[1].split('=')[1] + "\r\n"
+    boundary = boundary.encode()
 
-    while len(buff.split(boundary.encode(), 1)) > 1:
-        [bound,buff] = buff.split(boundary.encode(), 1)
-        count += len(bound)
-        [headers,buff] = buff.split(b"\r\n\r\n", 1)
-        count += len(headers)
-        headers = parse.parse_headers(headers.decode().split())
-        name = headers["Content-Disposition:"].split()[1].split('=')[1].strip('\"')
-        [body,buff] = buff.split(b"\r\n", 1)
-        count += len(body)
-        data[name] = body
+    data = parse.parse_multipart(buff, boundary)
+    
+    # token = request.cookies[constants.COOKIE_AUTH_TOKEN]
+    # db = conn[constants.DB_USERS]
+    # username = authentication.validate_user(token, db)
+    # authentication.auction(data, conn)
 
-    token = request.cookies[constants.COOKIE_AUTH_TOKEN]
-    db = conn[constants.DB_USERS]
-    username = authentication.validate_user(token, db)
-    authentication.auction(data, conn)
-
-    auc_db = conn[constants.DB_AUC]
+    # auc_db = conn[constants.DB_AUC]
 
     return render_template('index.html')
 
