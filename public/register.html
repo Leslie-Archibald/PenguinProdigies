@@ -27,16 +27,16 @@
                     <br />
                     <br />
                     <form method="POST" action="/registeraction" class="form">
-                        <div style="color: red;text-align: center;">{{error}}</div>
+                        <div style="color: red; text-align: center;" class="formSubItem">{{error}}</div>
+                        <!-- <div style="color: red;text-align: center;">{{error}}</div> -->
                         <label for="username" id="usernameLabel" class="formSubItem formLabel">Username:</label>
                         <input type="text" name="username" placeholder="Username" id="usernameInput" class="formSubItem" autofocus>
                         <br />
                         <label for="password" id="passwordLabel" class="formSubItem formLabel">Password:</label>
                         <input type="password" name="password" placeholder="Password" id="passwordInput" class="formSubItem">
                         <br />
-                        <button class="formButton" onclick="register()">Login</button>
+                        <button class="formButton" onclick="register()">Register</button>
                     </form>
-                    
                 </div>
             </div>
         </div>

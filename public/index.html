@@ -6,10 +6,15 @@
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
+        {% set chatHistory = '' %}
+
         <title>Super Epic CSE312 Webpage</title>
-        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="/style.css" type="text/css">
     </head>
-    <body class="flexBox" onload="createLink();">
+
+    <body onload="welcome();">
+
+    <body class="flexBox" onload="createLink()">
         <div class="flexBox"></div>
             <div class="banner flexBox">
                 <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
@@ -24,12 +29,9 @@
                         {% else %}
                         <a class="navLink flexItem conditionalLink" href="/register">register</a>
                         <a class="navLink flexItem conditionalLink" href="/login">login</a>
-                        <br />
-                        <span class="userText"> Welcome Guest!</span>
                         {% endif %}
-                        
                     </div>
-                   
+
                 </div>
             </div>
             <div class="pageContents flexBoxHor">
@@ -37,13 +39,13 @@
                     <div class="user"> 
                         <h3 class="userTitle flexItem">Users Online</h3>
                         <hr />
-                        <div class="userList">{{username}}</div>
+                        <div class="userList" id="userid">{{username}}</div>
                     </div>
                 </div>
                 <div class="chatDiv">
                    <div class="chat">
                         <div class="chatHistory" id="chatHistory">
-
+                            {{chatHistory}}
                         </div>
                         <hr />
                             <div class="chatFormDiv">
