@@ -91,3 +91,32 @@ function welcome() {
     updateChat();
     setInterval(updateChat, 2000);
 }
+
+function showAuction(messageJSON){
+    const username = messageJSON["username"];
+    const title = messageJSON["title"];
+    const postID = messageJSON["id"];
+    const description = messageJSON["description"];
+    const bid = messageJSON["starting bid"];
+    const time = messageJSON["start time"];
+    const winner = messageJSON["winner"];
+    const imgPath = messageJSON["image"];
+
+    auctionHTML =  '<div class="auctionPost" id="' + postID  + '">';
+    auctionHTML += '<hr>';
+    auctionHTML += '<b>' + title + '</b>';
+    auctionHTML += '<br />';
+    auctionHTML += '<img class="auctionImage" src="' + imgPath + '" />';
+    auctionHTML += '<p>' + description + '</p>'
+    auctionHTML += '<p id="currBid">Current highest bid: ' + bid  + "</p>"
+    auctionHTML += '<p id="currLeader">Current leader: ' + winner + '</p>';
+    auctionHTML += '<p id="timer">Time Remaining: '+ time + '</p>';
+    auctionHTML += '<label for="makeBid">' +
+            '<input id="makeBid" name="makeBid" type="text">' +
+            '</label>' +
+            '<button id="sendBid">Send</button>' +
+            '<hr>' +
+            '</div>';
+
+    return auctionHTML;
+}   
