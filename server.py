@@ -12,8 +12,8 @@ from util.likes import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+# client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
@@ -167,8 +167,8 @@ def history_response():
     for chat in chat_cur:
         #print("Chat =")
         
-        username = chat["username"]
-        postID = chat["id"]
+        username = chat.get("username")
+        postID = chat.get("id")
         chat["numLikes"] = numLikes(likes_collection, {"username":username,"id":postID} )
         #print(dumps(chat))
         temp += dumps(chat)
@@ -176,7 +176,7 @@ def history_response():
     temp = temp.strip(", ")
     temp += "]"
     json_data = temp
-    print(json_data)
+    # print(json_data)
     response = flask.make_response(json_data.encode())
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "applicaton/json; charset=utf-8"
@@ -197,7 +197,7 @@ def auction_form_response():
     print('form data', data)
     print('form files', files)
     # img = data['upload']
-    return flask.send_from_directory("public", "login.html")
+    return render_template('index.html')
 
     
 if __name__ == "__main__":

@@ -4,6 +4,7 @@
         <!-- meta tags -->
         <meta charset="UTF-8">
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
         {% set chatHistory = '' %}
@@ -48,48 +49,32 @@
                             {{chatHistory}}
                         </div>
                         <hr />
-<<<<<<< HEAD
-                        <div class="chatForm">
-                            <label>Title:
-                                <input id="titleBox" type="text">
-                            </label>
-                            <label>Message
-                                <input id="messageBox" type="text">
-                            </label>
-                            {% if username is defined %}
-                            <button id="sendMessage"onclick="sendPost()">Send</button>
-                            {% else %}
-                            <button id="sendMessage">Send</button>
-                            {% endif %}
-                        </div>
-=======
                             <div class="chatFormDiv">
                                <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
                                 <label for="itemName" class="formLabels">Title:
-                                    <input type="text" id="itemName">
+                                    <input type="text" id="itemName" name="title">
                                 </label> 
                                 <label for="itemDescription" class="formLabels">Description:
-                                    <input type="text" id="itemDescription">
+                                    <input type="text" id="itemDescription" name="description">
                                 </label>
                                 <label for="itemFile" class="formLabels">
                                     <input type="file" name="upload" id="itemFile">
                                 </label>
                                 <label for="startingBid" class="formLabels">
-                                    <input type="text" id="startingBid">
+                                    <input type="text" id="startingBid" name="startingBid">
                                 </label>
-                                <label for="bidTime1">1 minute
-                                    <input type="radio" id="bidTime1">
-                                </label>
-                                <label for="bidTime5" class="formLabels">5 minutes
-                                    <input type="radio" id="bidTime5">
-                                </label>
-                                <label for="bidTime10" class="formLabels">10 minutes
-                                    <input type="radio" id="bidTime10">
-                                </label>
-                                <input type="submit" value="Post">
+                                <fieldset style="margin: 2px">
+                                    <legend>Select Bid Time</legend>
+                                    <input type="radio" id="bidTime1" name="bidtime" value="1">
+                                    <label for="bidTime1">1 minute</label>
+                                    <input type="radio" id="bidTime5" name="bidtime" value="5">
+                                    <label for="bidTime5" class="formLabels">5 minutes</label>
+                                    <input type="radio" id="bidTime10" name="bidtime" value="10">
+                                    <label for="bidTime10" class="formLabels">10 minutes</label>
+                                </fieldset>
+                                <input type="submit" value="Post" onclick="">
                                </form>
                             </div>
->>>>>>> Leslies-Branch
 
                    </div>
                 </div>

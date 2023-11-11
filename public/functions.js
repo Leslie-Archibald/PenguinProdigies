@@ -88,6 +88,6 @@ function welcome() {
         }
     });
 
-    updateChat();
-    setInterval(updateChat, 2000);
+    // updateChat(); -- updating chat is disabled
+    // setInterval(updateChat, 2000);
 }
