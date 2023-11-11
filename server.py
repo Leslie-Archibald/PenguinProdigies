@@ -158,8 +158,8 @@ def get_Multipart():
     data['username'] = username
     auc_collection.insert_one(data)
 
-    #Chh
-    if data['filename'] =='' or data['datatype'] not in authentication.allowed_extensisons:
+    #Check if file is allowed and save to /images
+    if data['filename'] =='':
         return render_template('errormsg.html', msg='No selected image for auction item', redirect='/')
     if data['datatype'] not in authentication.allowed_extensisons:
         return render_template('errormsg.html', msg='File type is not allowed', redirect='/')
