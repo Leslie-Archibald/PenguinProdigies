@@ -16,12 +16,22 @@ def parse_headers(data: str):
 
 def parse_multipart(buff: bytes, boundary: bytes):
     dic = {}
-    while len(buff.split(boundary.encode(), 1)) > 1:
+    while len(buff.split(boundary, 1)) > 1:
         [bound,buff] = buff.split(boundary, 1)
         [headers,buff] = buff.split(b"\r\n\r\n", 1)
         headers = parse_headers(headers.decode().split())
+        print(headers)
         name = headers["Content-Disposition:"].split()[1].split('=')[1].strip('\"')
-        [body,buff] = buff.split(b"\r\n", 1)
+        if name == 'upload";':
+            [body,buff] = buff.split(b"\r\n", 1)
+            name = name.strip('\";')
+            filename = headers["Content-Disposition:"].split()[2].split('=')[1].strip('\"')
+            filetype = headers["Content-Type:"].split('/')[1]
+            dic['filename'] = filename
+            dic['filetype'] = filetype
+        else:
+            [body,buff] = buff.split(b"\r\n", 1)
+            body = body.decode()
         dic[name] = body
 
     return dic

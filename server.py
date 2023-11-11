@@ -5,21 +5,24 @@ import os
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
+from werkzeug.utils import secure_filename
 
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
 import util.parse as parse
 
+
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
+#client = MongoClient('localhost')
 client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
+auc_collection = conn[constants.DB_AUC]
 
-upload_folder = 'public/images'
+upload_path = '../PenguinProdigies/public/images'
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
@@ -138,6 +141,36 @@ def visits_Counter():
     myResponse.mimetype = "text/plain; charset=utf-8"
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
+
+@app.route("/auction-div", methods=['POST'])
+def get_Multipart():
+    
+    username = authentication.get_user(conn)
+    buff = request._get_stream_for_parsing()
+    buff = buff.read()
+    boundary = "--" + request.headers["Content-Type"].split()[1].split('=')[1] + "\r\n"
+    boundary = boundary.encode()
+
+    #Parses buffer for auction info
+    data = parse.parse_multipart(buff, boundary)
+
+    #Insert user info into auc database
+    data['username'] = username
+    auc_collection.insert_one(data)
+
+    #Chh
+    if data['filename'] =='' or data['datatype'] not in authentication.allowed_extensisons:
+        return render_template('errormsg.html', msg='No selected image for auction item', redirect='/')
+    if data['datatype'] not in authentication.allowed_extensisons:
+        return render_template('errormsg.html', msg='File type is not allowed', redirect='/')
+    else:
+        filename = secure_filename(data['filename'])
+        filename = data['username'] + filename + '.' + data['filetype']
+        file = open(upload_path + '/' + filename, 'wb')
+        file.write(data['upload'])
+        file.close()
+    
+    return render_template('index.html', redirect='/')
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)

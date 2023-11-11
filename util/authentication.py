@@ -77,3 +77,4 @@ def get_user(conn):
         return None
     else:
         return user['username']
+    
