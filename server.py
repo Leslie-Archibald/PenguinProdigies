@@ -15,14 +15,12 @@ import util.parse as parse
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-#client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+# client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 auc_collection = conn[constants.DB_AUC]
-
-upload_path = '../PenguinProdigies/public/images'
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
@@ -161,16 +159,17 @@ def get_Multipart():
     #Check if file is allowed and save to /images
     if data['filename'] =='':
         return render_template('errormsg.html', msg='No selected image for auction item', redirect='/')
-    if data['datatype'] not in authentication.allowed_extensisons:
+    if data.get('filetype') not in authentication.allowed_extensisons:
         return render_template('errormsg.html', msg='File type is not allowed', redirect='/')
     else:
         filename = secure_filename(data['filename'])
-        filename = data['username'] + filename + '.' + data['filetype']
-        file = open(upload_path + '/' + filename, 'wb')
+        filename = data['username'] + filename
+        file = open(constants.UPLOAD_PATH + '/' + filename, 'wb')
         file.write(data['upload'])
         file.close()
     
-    return render_template('index.html', redirect='/')
+    return redirect(url_for('user_Home', user=username))
+            
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)

@@ -3,3 +3,5 @@ COOKIE_VISIT_COUNTER = 'visits'
 
 DB_USERS = 'users'
 DB_AUC = 'auc'
+
+UPLOAD_PATH = './public/images'
