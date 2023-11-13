@@ -14,3 +14,4 @@ def getAucInfo(id, conn):
     #endIf
 #endDef
 
+     
