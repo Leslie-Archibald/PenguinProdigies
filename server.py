@@ -7,6 +7,7 @@ from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
 from flask_socketio import SocketIO
 import asyncio
+import time
 
 import util.authentication as authentication
 import util.constants as constants
@@ -66,7 +67,12 @@ def form_css():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
-
+@app.route('/auctionFunctions.js')
+def auctionFunctions_js():
+    myResponse = flask.send_from_directory('public','auctionFunctions.js')
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/javascript"
+    return myResponse
 @app.route("/user/functions.js")
 @app.route("/functions.js")
 def home_js():
@@ -198,6 +204,7 @@ def like_response():
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WebSocket Paths
+
 @socket.on("connect")
 def handleOpen():
     socket.send("Ligma Balls")
@@ -205,6 +212,15 @@ def handleOpen():
 @socket.on("message")
 def handleMsg(msg):
     socket.send(msg + " Also, LIGMA BAWLZ")
+
+totTime = int(time.time())+15 #hard coded, remove this and replace with code that fetches the actual time from the db
+@socket.on("start-timer")
+def startTimer(timeLeft):
+    totTime = int(time.time())+15
+
+@socket.on("get-time")
+def giveTime():
+    socket.emit('time-left',totTime-int(time.time() ) )
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

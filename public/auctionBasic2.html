@@ -2,24 +2,15 @@
 <html lang="en-US">
     <script src="functions.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-    <script type="text/javascript" charset="utf-8">
-        var socket = io.connect('http://localhost:8080')
-        socket.on('message', function(data) {
-            console.log(data);
-        });
-        function sendMessage(msg){
-            console.log("Got here!");
-            socket.emit('message',msg);
-            return;
-        }
-    </script>
+    <script src="auctionFunctions.js"></script>
     <head>
-
-
     </head>
     <body>
-        <div class="auctionInfo">
-            <button onclick="sendMessage('Hello World!');">Join Auction</button>
+        <div class="auctionInfo" onload="joinAuction();">
+            <button onclick="joinAuction();">Join Auction</button>
+            <button onclick="sendMessage('Hello World!');">Send msg</button>
+            <button onclick="timer();">Start Timer</button>
         </div>
+        <div id="time-left"></div>
     </body>
 </html>
