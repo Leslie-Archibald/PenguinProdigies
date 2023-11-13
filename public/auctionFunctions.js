@@ -1,7 +1,7 @@
 var sock;
 var timerID = null;
 function joinAuction(){
-    sock = io.connect("http://localhost:8080");
+    sock = io.connect("http://localhost:8080", { transports: ["websocket"] });
     sock.on('message',(data)=>{
         console.log(data);
     });

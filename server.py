@@ -22,6 +22,9 @@ conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 
+auctions_collection = conn["auctions"]
+auctions_collection.insert_one({"auction owner":"coolUser","title":"coolTitle","auction id":1234,"duration":"5","starting bid":"50","winning bid":""})
+
 socket = SocketIO(app)
 
 
@@ -229,14 +232,22 @@ def handleOpen():
 def handleMsg(msg):
     socket.send(msg + " Also, LIGMA BAWLZ")
 
-totTime = int(time.time())+15 #hard coded, remove this and replace with code that fetches the actual time from the db
-@socket.on("start-timer")
-def startTimer(timeLeft):
+def startTimer(auctionID):
+    #I dont think we need this
     totTime = int(time.time())+15
 
 @socket.on("get-time")
-def giveTime():
-    socket.emit('time-left',totTime-int(time.time() ) )
+def giveTime(auctionID):
+    totTime = auctions_collection.find_one({"auction id":auctionID})["end time"]
+    socket.emit('time-left',int(totTime)-int(time.time()) )
+
+@socket.on("place-bid")
+def placeBid(data):
+    #expecting: [auctionID,bid]
+    currHighest = auctions_collection.find_one({"auction id":data[0]})["winning bid"]
+    if(int(data[1] > int(currHighest) ) ):
+        username = authentication.get_user(conn)
+        
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
