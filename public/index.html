@@ -37,7 +37,7 @@
                     <div class="auctionForm"> 
                         <br />
                         <br />
-                        <h3 id="formTite">Make an Auction!</h3>
+                        <h3 class="formTite">Make an Auction!</h3>
                         <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
                             
                             <label for="itemName" class="formLabels">Title:      
@@ -56,15 +56,15 @@
                             <br />
                             <h3 id="timeTitle">Auction Time</h3>
                             <label for="bidTime1" class="formLabels"> 1 minute:
-                                <input type="radio" id="bidTime1" class="radioButton" name="time" >
+                                <input type="radio" id="bidTime1" class="radioButton" name="time" value="1">
                             </label>
                             <br>
                             <label for="bidTime5" class="formLabels">5 minutes:
-                                <input type="radio" id="bidTime5" class="radioButton" name="time">
+                                <input type="radio" id="bidTime5" class="radioButton" name="time" value="5">
                             </label>
                             <br> 
                             <label for="bidTime10" class="formLabels">10 minutes:
-                                <input type="radio" id="bidTime10" class="radioButton" name="time">
+                                <input type="radio" id="bidTime10" class="radioButton" name="time" value="10">
                             </label>
                             <br />
                             <br />
@@ -73,6 +73,19 @@
                             </label>
                             <input type="submit" value="Post" id="formButton">
                         </form>
+                        <br />
+                        <hr />
+                        <h3 class="formTitle">Send a Message</h3>
+                        <form id="chatForm"></form>
+                        <label for="titleBox" class="formLabels">Title:
+                            <input type="text" id="titleBox" name="titleBox">
+                        </label>
+                        <br />
+                        <label for="messageBox" class="formLabels"> Message:
+                            <input type="text" id="messageBox" name="messageBox">
+                        </label>
+                        <input type="submit" value="Post" id="formButton">
+                    </form>
                     </div>
                 </div>
                 <div class="chatDiv">
