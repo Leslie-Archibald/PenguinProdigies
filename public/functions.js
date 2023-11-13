@@ -151,3 +151,5 @@ function joinAuction(postID){
     newPath = "/auction"+postID;
     location.assign(newPath);
 }
+    //return auctionHTML;
+//}   

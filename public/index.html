@@ -41,7 +41,7 @@
                         <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
                             
                             <label for="itemName" class="formLabels">Title:      
-                                <input type="text" id="itemName" name="item" class="formInput">
+                                <input type="text" id="itemName" name="title" class="formInput">
                             </label>
                             <br />
                             <label for="itemDescription" class="formLabels">Description: 
@@ -71,7 +71,11 @@
                             <label for="itemFile" class="formLabels">
                                 <input type="file" name="upload" id="itemFile">
                             </label>
+                            {% if username is defined %}
                             <input type="submit" value="Post" id="formButton">
+                            {% else %}
+                            <input type="button" value="Post" id="formButton">
+                            {% endif %}
                         </form>
                         <br />
                         <hr />

@@ -12,6 +12,7 @@ import time
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
+from util.auction import *
 
 
 app = Flask(__name__, template_folder='public')
@@ -21,6 +22,7 @@ client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
+auction_collection = conn[constants.DB_AUCTION]
 
 auctions_collection = conn["auctions"]
 auctions_collection.insert_one({"auction owner":"coolUser","title":"coolTitle","auction id":1234,"duration":"5","starting bid":"50","winning bid":""})
@@ -220,7 +222,12 @@ def profile():
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "text/html"
     return response
-
+@app.route('/auction-div', methods=['POST'])
+def auction_Post():
+    print('request.form', request.form)
+    print('request.files', request.files)
+    return auction_response(request, conn)
+    
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WebSocket Paths
 
@@ -239,15 +246,23 @@ def startTimer(auctionID):
 @socket.on("get-time")
 def giveTime(auctionID):
     totTime = auctions_collection.find_one({"auction id":auctionID})["end time"]
-    socket.emit('time-left',int(totTime)-int(time.time()) )
+    socket.emit('time-left',(totTime)-int(time.time()) )
+
+@socket.on("get-info")
+def giveInfo(auctionID):
+    info = getAucInfo(auctionID,conn)
+    socket.emit("info-response",info)
 
 @socket.on("place-bid")
 def placeBid(data):
     #expecting: [auctionID,bid]
     currHighest = auctions_collection.find_one({"auction id":data[0]})["winning bid"]
-    if(int(data[1] > int(currHighest) ) ):
+    if(int(data[1]) > int(currHighest) ):
         username = authentication.get_user(conn)
-        
+        auctions_collection.update_one({"auction id":data[0]},{"winning bid":data[1],"winner":username})
+        socket.emit("bid-response","Success")
+    else:
+        socket.emit("bid-response","Failed")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
