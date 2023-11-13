@@ -92,31 +92,62 @@ function welcome() {
     setInterval(updateChat, 2000);
 }
 
-function showAuction(messageJSON){
-    const username = messageJSON["username"];
+function sendAuction(){
+    const itemBox = document.getElementById("itemName");
+    const item = itemBox.value;
+    itemBox.value = "";
+
+    const descripBox = document.getElementById("itemDescription")
+    const description = descripBox.value;
+    descripBox.value = "";
+
+    const bidBox = document.getElementById("startingBid")
+    const bid = bidBox.value;
+    bidBox.value = "";
+
+    const timeList = document.getElementsByName("time")
+    for (i = 0; i < timeList.length; i++){
+        if (timeList[i].checked){
+            const startTime = timeList[i].value;
+            timeList[i].checked = false;
+        }
+    }
+
+    // TODO: get and attach file information to post request 
+
+
+    // username = auction creator, id = post id
+    const username = document.getElementById('userid').innerText;
+    const id = this.crypto.randomUUID();
+    const messageJSON = {"title": item, "auction creator": username, "description": description, "id": id, "bid": bid, "time": time};
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            console.log(this.response);
+        }
+    }
+    request.open("POST", "/auction-message");
+    request.send(JSON.stringify(messageJSON));
+    titleTextBox.focus();
+    descriptionTextBox.focus();
+}   
+
+function auctionMessageHTML(messageJSON){
+    const username = messageJSON["username"]
     const title = messageJSON["title"];
     const postID = messageJSON["id"];
     const description = messageJSON["description"];
-    const bid = messageJSON["starting bid"];
-    const time = messageJSON["start time"];
-    const winner = messageJSON["winner"];
-    const imgPath = messageJSON["image"];
+    const numLikes = messageJSON["numLikes"];
+    let messageHTML = "<br><button onclick='deleteMessage(" + title + ")'>X</button> ";
+    messageHTML +=  "<span id='" + postID + "'title='" + title + "'><b>" + username + "</b>: " + 
+                        "I'm selling " + title + "! "
+                        "<button className='joinAuctionButton' onClick=\"joinAuction(\'"+postID+"\')\">Join Auction!</button>" +
+                    "</span>";
+    return messageHTML;
 
-    auctionHTML =  '<div class="auctionPost" id="' + postID  + '">';
-    auctionHTML += '<hr>';
-    auctionHTML += '<b>' + title + '</b>';
-    auctionHTML += '<br />';
-    auctionHTML += '<img class="auctionImage" src="' + imgPath + '" />';
-    auctionHTML += '<p>' + description + '</p>'
-    auctionHTML += '<p id="currBid">Current highest bid: ' + bid  + "</p>"
-    auctionHTML += '<p id="currLeader">Current leader: ' + winner + '</p>';
-    auctionHTML += '<p id="timer">Time Remaining: '+ time + '</p>';
-    auctionHTML += '<label for="makeBid">' +
-            '<input id="makeBid" name="makeBid" type="text">' +
-            '</label>' +
-            '<button id="sendBid">Send</button>' +
-            '<hr>' +
-            '</div>';
+}
 
-    return auctionHTML;
-}  
+function joinAuction(postID){
+    newPath = "/auction"+postID;
+    location.assign(newPath);
+}
