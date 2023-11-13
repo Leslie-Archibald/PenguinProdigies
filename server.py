@@ -153,7 +153,10 @@ def get_Multipart():
     data = parse.parse_multipart(buff, boundary)
 
     #Insert user info into auc database
-    data['username'] = username
+    if username != None:
+        data['username'] = username
+    else:
+        return render_template('errormsg.html', msg='User not logged in', redirect='/')
     auc_collection.insert_one(data)
 
     #Check if file is allowed and save to /images
@@ -163,7 +166,7 @@ def get_Multipart():
         return render_template('errormsg.html', msg='File type is not allowed', redirect='/')
     else:
         filename = secure_filename(data['filename'])
-        filename = data['username'] + filename
+        filename = data['username'] + filename + '.' + data.get('filetype')
         file = open(constants.UPLOAD_PATH + '/' + filename, 'wb')
         file.write(data['upload'])
         file.close()

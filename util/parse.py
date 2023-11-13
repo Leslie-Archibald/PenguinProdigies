@@ -20,10 +20,13 @@ def parse_multipart(buff: bytes, boundary: bytes):
         [bound,buff] = buff.split(boundary, 1)
         [headers,buff] = buff.split(b"\r\n\r\n", 1)
         headers = parse_headers(headers.decode().split())
-        print(headers)
         name = headers["Content-Disposition:"].split()[1].split('=')[1].strip('\"')
         if name == 'upload";':
             [body,buff] = buff.split(b"\r\n", 1)
+            if b'PNG' in body:
+                i = body
+                [body, buff] = buff.split(b"\r\n", 1)
+                body = i + b'\r\n' + body
             name = name.strip('\";')
             filename = headers["Content-Disposition:"].split()[2].split('=')[1].strip('\"')
             filetype = headers["Content-Type:"].split('/')[1]
