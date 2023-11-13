@@ -57,6 +57,13 @@ def form_css():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
+@app.route('/profilestyles.css')
+def profile_css():
+    myResponse = flask.send_from_directory('public', 'profilestyles.css')
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/css"
+    return myResponse
+
 
 @app.route("/user/functions.js")
 @app.route("/functions.js")
@@ -189,6 +196,12 @@ def like_response():
     print("PostID is:", postID)
     totalLikes = likes(likes_collection,{"username":username,"id":postID} )
     return(history_response() )
+@app.route('/profile')
+def profile():
+    response = make_response(render_template('profile.html'))
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.mimetype = "text/html"
+    return response
 
     
 if __name__ == "__main__":
