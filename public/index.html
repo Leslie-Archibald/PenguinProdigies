@@ -41,7 +41,7 @@
                         <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
                             
                             <label for="itemName" class="formLabels">Title:      
-                                <input type="text" id="itemName" name="item" class="formInput">
+                                <input type="text" id="itemName" name="title" class="formInput">
                             </label>
                             <br />
                             <label for="itemDescription" class="formLabels">Description: 
@@ -56,22 +56,26 @@
                             <br />
                             <h3 id="timeTitle">Auction Time</h3>
                             <label for="bidTime1" class="formLabels"> 1 minute:
-                                <input type="radio" id="bidTime1" class="radioButton" name="time" >
+                                <input type="radio" id="bidTime1" class="radioButton" name="time" value="1">
                             </label>
                             <br>
                             <label for="bidTime5" class="formLabels">5 minutes:
-                                <input type="radio" id="bidTime5" class="radioButton" name="time">
+                                <input type="radio" id="bidTime5" class="radioButton" name="time" value="5">
                             </label>
                             <br> 
                             <label for="bidTime10" class="formLabels">10 minutes:
-                                <input type="radio" id="bidTime10" class="radioButton" name="time">
+                                <input type="radio" id="bidTime10" class="radioButton" name="time" value="10">
                             </label>
                             <br />
                             <br />
                             <label for="itemFile" class="formLabels">
                                 <input type="file" name="upload" id="itemFile">
                             </label>
+                            {% if username is defined %}
                             <input type="submit" value="Post" id="formButton">
+                            {% else %}
+                            <button>Post</button>
+                            {% endif %}
                         </form>
                     </div>
                 </div>

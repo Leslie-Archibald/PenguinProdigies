@@ -12,11 +12,12 @@ from util.likes import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+# client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
+auction_collection = conn[constants.DB_AUCTION]
 
 
 directory = directory = os.path.dirname(__file__)
@@ -203,6 +204,11 @@ def profile():
     response.mimetype = "text/html"
     return response
 
+@app.route('/auction-div', methods=['POST'])
+def auction_Post():
+    print('request.form', request.form)
+    print('request.files', request.files)
+    return render_template('errormsg.html')
     
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
