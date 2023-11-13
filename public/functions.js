@@ -113,13 +113,13 @@ function sendAuction(){
         }
     }
 
-    // not 100% sure how to send the file stuff...
-    const fileName = document.getElementById("itemFile")
+    // TODO: get and attach file information to post request 
+
 
     // username = auction creator, id = post id
     const username = document.getElementById('userid').innerText;
     const id = this.crypto.randomUUID();
-    const messageJSON = {"title": item, "username": username, "description": description, "id": id, "bid": bid, "time": time};
+    const messageJSON = {"title": item, "auction creator": username, "description": description, "id": id, "bid": bid, "time": time};
     const request = new XMLHttpRequest();
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -145,4 +145,9 @@ function auctionMessageHTML(messageJSON){
                     "</span>";
     return messageHTML;
 
+}
+
+function joinAuction(postID){
+    newPath = "/auction"+postID;
+    location.assign(newPath);
 }
