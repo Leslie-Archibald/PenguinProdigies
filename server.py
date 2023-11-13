@@ -5,14 +5,18 @@ import os
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
+import websockets
+from websockets.server import serve
+import asyncio
 
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
 
+
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
+#client = MongoClient('localhost')
 client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
@@ -20,8 +24,6 @@ likes_collection = conn["likes"]
 
 
 directory = directory = os.path.dirname(__file__)
-#relative_Path = flask.Request.path
-#relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -185,12 +187,22 @@ def like_response():
     print("PostID is:", postID)
     totalLikes = likes(likes_collection,{"username":username,"id":postID} )
     return(history_response() )
-@app.route("/auction-div",methods=["POST"])
-def auction_Response():
-    #IMG HANDLING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    img = request.get_json()["itemFile"]
-    myResponse = make_response()
-    return myResponse
     
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WebSocket Paths
+async def conHandler(socket):
+    async for msg in socket:
+        print(msg)
+        await socket.send("Message Recieved was: "+msg)
+
+async def sock():
+    async with websockets.serve(conHandler,"ws://0.0.0.0",8080):
+        await asyncio.Future()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
+    print("Hello")
+    asyncio.run(sock())

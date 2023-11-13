@@ -91,3 +91,14 @@ function welcome() {
     updateChat();
     setInterval(updateChat, 2000);
 }
+
+var socket = new WebSocket('ws://' + window.location.host);
+sock.addEventListener('open', function(event) {
+    console.log("Lets go baby! We got a connection!")
+});
+sock.addEventListener('message', function(event) {
+    console.log(event.data)
+});
+function joinAuction(){
+    sock.send("Hello World!");
+}
