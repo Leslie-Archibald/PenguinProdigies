@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+
+
+    </head>
+    <body>
+        <div class="auctionInfo">
+            {% if title && username is defined %}
+            <h1 id="auctionTitle"> {{title}} for sale by {{username}} </h1>
+            {% endif %}
+            
+            {% if sourcePath is defined %}
+            <img src={{sourcePath}} id="auctionImage"/>
+            {% endif %}
+
+            {% if bid is defined && time != 0 %}
+            <span id="bidSpan">Current bid: {{bid}} </span>
+            {% else %}
+            <span id="bidSpan">Winning bid: {{bid}}</span>
+            {% endif %}
+
+            {% if winner is defined && time != 0 %}
+            <span id="winnerSpan">Current Leader: {{winner}} </span>
+            {% else %}
+            <span id="winnerSpan">Winner: {{winner}} </span>
+            {% endif %}
+
+            {% if time is defined %}
+            <span id="timeSpan">Time Remaining: {{time}} seconds</span>
+            {% endif %}
+
+            {% if time is defined && time != 0 %}
+            <label for="sendBid">
+                <input type="text" name="sendBid" id="sendBid">
+            </label>
+            <button id="bidButton" onclick="sendBid()">Send</button>
+            {% else %}
+            <span id="closedSpan"> The auction has been completed, no new bids will be accepted</span>
+        </div>
+    </body>
+</html>

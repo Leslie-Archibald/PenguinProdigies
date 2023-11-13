@@ -1,0 +1,158 @@
+/*  stylesheet for profile.html of Penguin Prodigies CSE312 Project
+*   Authors: Leslie (lmarchib), Ryan (rjwu),
+*   Solomon (solomonr), Winston (wpeng2)
+*/
+
+/* universal styling rules */
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    background-color: lightblue;
+}
+
+/* flexbox rules */
+
+.flexbox{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.flexBoxHor{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: start;
+    justify-content: space-around;
+}
+
+.flexNavBar{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: start;
+}
+
+.flexItem{
+    align-self: auto;
+}
+
+/*  Navbar styling  */
+
+.banner {
+    width: 100%;
+    height: 15%;
+    position: fixed;
+    top: 0;
+    background-color: steelblue;
+    align-content: center;
+    justify-content: space-around;
+    
+}
+
+.navBar {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+a.navLink{
+    font-size: 20px;
+    color: black;
+}
+
+h1#navTitle {
+    text-align: center;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    font-size: 30px;
+    color: black;
+    vertical-align: top;
+}
+
+/* page contents styling */
+ hr{
+    color: steelblue
+ }
+
+ .pageContents{
+    width: auto;
+    height: auto;
+    position: bottom;
+    margin-top: 5%;
+    padding: 20px;
+ }
+
+.statTitle{
+    padding: 20px;
+    width: 100%;
+    height: auto;
+    text-align: center;
+}
+
+
+/* left div - auctions created */
+.creationFrame{
+    background-color: steelblue;
+    width: 45%;
+    min-height: 550px;
+    max-height: auto;
+    height: 85%;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+    
+}
+
+.creationList{
+    background-color: whitesmoke;
+    min-height: 550px;
+    height: 100%;
+    max-height: auto;
+}
+
+.creationHistory{
+    padding: 10px;
+    min-height: 450px;
+}
+
+
+/* right div - auctions won */
+
+.winFrame{
+    background-color: steelblue;
+    width: 45%;
+    min-height: 550px;
+    max-height: auto;
+    height: 85%;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+    float: right;
+}
+
+.winList{
+    background-color: whitesmoke;
+    min-height: 550px;
+    height: 100%;
+    max-height: auto;
+}
+
+.winHistory{
+    padding: 10px;
+    min-height: 450px;
+}
+
+/* universal div stuff */
+.divTitle{
+    text-align: center;
+}
+
+

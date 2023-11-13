@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <!-- meta tags -->
+        <meta charset="UTF-8">
+        <meta name="author" content="Leslie, Ryan, Solomon, Winston">
+        <meta name="description" content="CSE312 project for the group Penguin Prodigies user page">
+
+        <title>Super Epic CSE312 Website</title>
+        <link rel="stylesheet" href="profilestyles.css" type="text/css">
+    </head>
+    <body class="flexBox">
+        <!-- banner and navbar stuff-->
+        <div class="flexBox">
+            <div class="flexBox banner">
+                <h1 id="navTitle" class="flexItem">Super Amazing User Page :O</h1>
+                <div class="navbar flexNavBar">
+                    <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
+                    <a class="navLink flexItem" href="/index">home page</a>
+                    <a class="navLink flexItem" href="/logout">log out</a>
+                </div>
+            </div>
+        </div>
+
+       <div class="pageContents flexBox"> 
+        <!-- br tag needed to get text to display right -->
+        <br />
+        <div class="statTitle flexItem">
+        {% if username is defined %}
+        <h2 class="userText">{{username}}'s stats</h2>
+        {% else %}
+        <h2 class="userText">Stats</h2>
+        {% endif %}
+        <!-- <h2>Guest's Stats</h2> -->
+        </div>
+        <div class="flexBoxHor">
+            <div class="creationFrame flexBox flexItem">
+                <div class="creationList flexItem">
+                    <h3 id="creationTitle" class="divTitle">Auctions Created</h3>
+                    <hr />
+                    <div class="creationHistory" id="creationHistory">
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="winFrame flexBox flexItem">
+                <div class="winList flexItem">
+                    <h3 id="winTitle" class="divTitle">Auctions Won</h3>    
+                    <hr />
+                    <div class="winHistory" id="winHistory">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
