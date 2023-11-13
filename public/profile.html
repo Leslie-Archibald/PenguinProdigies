@@ -6,6 +6,9 @@
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies user page">
 
+        {% set wonAuctions = '' %}
+        {% set createdAuction = '' %}
+
         <title>Super Epic CSE312 Website</title>
         <link rel="stylesheet" href="profilestyles.css" type="text/css">
     </head>
@@ -39,7 +42,7 @@
                     <h3 id="creationTitle" class="divTitle">Auctions Created</h3>
                     <hr />
                     <div class="creationHistory" id="creationHistory">
-
+                        {{createdAuction}}
                     </div>
                 </div>
             </div>
@@ -49,7 +52,7 @@
                     <h3 id="winTitle" class="divTitle">Auctions Won</h3>    
                     <hr />
                     <div class="winHistory" id="winHistory">
-
+                        {{wonAuctions}}
                     </div>
                 </div>
             </div>

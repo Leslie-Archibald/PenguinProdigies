@@ -10,6 +10,7 @@ import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
 
+
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
 # client = MongoClient('localhost')
@@ -17,6 +18,7 @@ client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
+auc_collection = conn["auc"]
 
 
 directory = directory = os.path.dirname(__file__)
@@ -198,7 +200,34 @@ def like_response():
     return(history_response() )
 @app.route('/profile')
 def profile():
-    response = make_response(render_template('profile.html'))
+   
+    username = authentication.get_user(conn)
+    won_cursor = auc_collection.find({"winner": username})
+    create_cursor = auc_collection.find({"auction owner": username})
+    tempWon = "["
+    tempCreate = "["
+
+    for won in won_cursor:
+        tempWon += dumps(won)
+        tempWon += ", "
+    #endFor
+    tempWon = tempWon.strip(", ")
+    tempWon += "]"
+    won_json = tempWon
+
+    for auc in create_cursor:
+        tempCreate += dumps(auc)
+        tempCreate += ", "
+    #endFor
+    tempCreate = tempCreate.strip(", ")
+    tempCreate += "]"
+    create_json = tempCreate
+
+    won_json = won_json.encode()
+    create_json = create_json.encode()
+
+
+    response = make_response(render_template('profile.html', username=username))
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "text/html"
     return response

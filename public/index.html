@@ -6,6 +6,8 @@
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
+        {% set chatHistory = '' %}
+
         <title>Super Epic CSE312 Webpage</title>
         <link rel="stylesheet" href="style.css" type="text/css">
     </head>
@@ -91,23 +93,7 @@
                 <div class="chatDiv">
                    <div class="chat">
                         <div class="chatHistory" id="chatHistory">
-                           <!-- dummy auctionpost for formatting stuff -->
-                            <!--  <div class="auctionPost">
-                                <hr>
-                                <b>Penguin for Sale!</b>
-                                <br />
-                                <img class="auctionImage" src="https://i.natgeofe.com/k/88de42b8-764c-40d2-89ee-e72d55dc95b8/emperor-penguin-chicks.jpg" />
-                                <p>Emperor penguin chicks</p>
-                                <p>Current highest bid: $600000000000000.00</p>
-                                <p>Current leader: APenguinStan </p>
-                                <p>Time Remaining: 30 seconds</p>
-                                <label for="makeBid">
-                                    <input id="makeBid" name="makeBid" type="text">
-                                </label>
-                                <button id="sendBid">Send</button>
-                                <hr>
-                            </div>
-     -->
+                            {{chatHistory}}
                         </div>
                    </div>
                 </div>
