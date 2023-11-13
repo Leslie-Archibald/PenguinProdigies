@@ -30,7 +30,7 @@ def register(username, password, conn, bcrypt):
                     'auth': m.digest()}
                     )
     response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.mimetype = 'text/html; charset=utf-8; HttpOnly'
+    response.mimetype = 'text/html; charset=utf-8'
     return response
 
 def login(username, password, conn, bcrypt):
@@ -48,12 +48,12 @@ def login(username, password, conn, bcrypt):
         )
     auth = generate_auth_token(response)
     cookieName = constants.COOKIE_AUTH_TOKEN
-    response.set_cookie(cookieName, auth, max_age=69420)
+    response.set_cookie(cookieName, auth, max_age=69420, httponly=True)
     m = hashlib.sha256()
     m.update(auth.encode())
     db.update_one({'username': username}, {"$set": {'auth': m.digest()}})
     response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.mimetype = 'text/html; charset=utf-8; HttpOnly'
+    response.mimetype = 'text/html; charset=utf-8'
     return response
 
 def generate_auth_token(response):
