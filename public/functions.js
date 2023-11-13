@@ -119,4 +119,16 @@ function showAuction(messageJSON){
             '</div>';
 
     return auctionHTML;
-}   
+}  
+
+var sock;
+function joinAuction(){
+    sock = new WebSocket("ws://localhost:8080/open")
+    sock.addEventListener("open", (event) => {
+        console.log("Connection Success!");
+    });
+    sock.addEventListener("message", (event) => {
+        console.log(event.data);
+    });
+    return;
+}

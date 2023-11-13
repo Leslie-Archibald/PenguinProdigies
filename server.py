@@ -5,8 +5,7 @@ import os
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
-import websockets
-from websockets.server import serve
+from flask_socketio import SocketIO
 import asyncio
 
 import util.authentication as authentication
@@ -22,6 +21,8 @@ conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 
+socket = SocketIO(app)
+
 
 directory = directory = os.path.dirname(__file__)
 
@@ -36,6 +37,12 @@ def home():
         myResponse = make_response(
             redirect(url_for('user_Home', user=username))
             )
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/html"
+    return myResponse
+@app.route("/auction", methods=['GET', 'POST'])
+def auction():
+    myResponse = make_response(render_template('auctionBasic2.html'))
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
@@ -191,18 +198,16 @@ def like_response():
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WebSocket Paths
-async def conHandler(socket):
-    async for msg in socket:
-        print(msg)
-        await socket.send("Message Recieved was: "+msg)
+@socket.on("connect")
+def handleOpen():
+    socket.send("Ligma Balls")
 
-async def sock():
-    async with websockets.serve(conHandler,"ws://0.0.0.0",8080):
-        await asyncio.Future()
+@socket.on("message")
+def handleMsg(msg):
+    socket.send(msg + " Also, LIGMA BAWLZ")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if __name__ == "__main__":
-    app.run(debug=True,host="0.0.0.0",port=8080)
-    print("Hello")
-    asyncio.run(sock())
+    #app.run(debug=True,host="0.0.0.0",port=8080)
+    socket.run(app,host="0.0.0.0",port=8080,debug=True,allow_unsafe_werkzeug=True)
