@@ -1,27 +1,34 @@
 import util.constants as constants
-from flask import redirect, render_template
+import util.authentication as auth
+from flask import redirect, render_template, make_response
 from werkzeug.utils import secure_filename
 
 def auction_response(request, conn):
     auctiondb = conn[constants.DB_AUCTION]
     form = request.form
+    username = auth.get_user(conn)
     db_insert_dict = {
         'title': form.get('title'),
         'description': form.get('description'),
-        'starting_bid': form.get('bid'),
-        'time': form.get('time')
+        'starting bid': form.get('bid'),
+        'start time': form.get('time'),
+        'auction owner': username,
     }
     file = request.files.get('upload')
-    allowed_filetype = file.filename.contains('.') and \
+    allowed_filetype = '.' in file.filename and \
         file.filename.split('.')[-1].lower() in constants.IMG_FILE_FORMATS
 
     if file is None or not allowed_filetype:
         return render_template('errormsg.html', msg='missing file field')
-    for val in db_insert_dict.values:
+    for val in db_insert_dict.values():
         if val is None:
             return render_template('errormsg.html',
                                    msg='missing fields, unable to create auction')
     filename = secure_filename(file.filename)
+    filename = f'{username}-{filename}'
+    print('-----------filename--------', filename)
+    file.save('./public/images/' + filename)
+    db_insert_dict['image'] = './public/images/' + filename
 
-
-    auctiondb.insert_one()
+    auctiondb.insert_one(db_insert_dict)
+    return redirect('/')

@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
+from util.auction import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
@@ -208,7 +209,7 @@ def profile():
 def auction_Post():
     print('request.form', request.form)
     print('request.files', request.files)
-    return render_template('errormsg.html')
+    return auction_response(request, conn)
     
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
