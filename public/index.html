@@ -6,62 +6,96 @@
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
-        {% set chatHistory = '' %}
-
         <title>Super Epic CSE312 Webpage</title>
-        <link rel="stylesheet" href="/style.css" type="text/css">
+        <link rel="stylesheet" href="style.css" type="text/css">
     </head>
-
-    <body onload="welcome();">
-
-    <body class="flexBox" onload="createLink()">
+    <body class="flexBox" onload="createLink();">
         <div class="flexBox"></div>
             <div class="banner flexBox">
                 <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
                 <div class="navbar flexNavBar">
                     <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
-                    <a class="navLink flexItem" href="/auctionMain">auction house</a>
                     <div class="flexBox" id="userGreeting">
                         {% if username is defined %}
                         <a class="navLink flexBoxItem conditionalLink" href="/logout">logout</a>
                         <br />
                         <span class="userText"> Welcome {{username}}</span>
+                        <a class="navLink flexItem conditionalLink" href="/profile">{{username}}'s profile</a>
                         {% else %}
                         <a class="navLink flexItem conditionalLink" href="/register">register</a>
                         <a class="navLink flexItem conditionalLink" href="/login">login</a>
+                        <br />
+                        <span class="userText"> Welcome Guest!</span>
                         {% endif %}
+                        
                     </div>
-
+                   
                 </div>
             </div>
             <div class="pageContents flexBoxHor">
-                <div class="userDiv flexBox flexItem">
-                    <div class="user"> 
-                        <h3 class="userTitle flexItem">Users Online</h3>
-                        <hr />
-                        <div class="userList" id="userid">{{username}}</div>
+                <div class="formDiv flexBox flexItem">
+                    <div class="auctionForm"> 
+                        <br />
+                        <br />
+                        <h3 id="formTite">Make an Auction!</h3>
+                        <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
+                            
+                            <label for="itemName" class="formLabels">Title:      
+                                <input type="text" id="itemName" name="item" class="formInput">
+                            </label>
+                            <br />
+                            <label for="itemDescription" class="formLabels">Description: 
+                                <input type="text" id="itemDescription" name="description" class="formInput">  
+                            </label>
+                            <br />
+                            <label for="startingBid" class="formLabels">Starting Bid:
+                                <input type="text" id="startingBid" name="bid" class="formInput">
+                            </label>
+                            <br />
+                            <br />
+                            <br />
+                            <h3 id="timeTitle">Auction Time</h3>
+                            <label for="bidTime1" class="formLabels"> 1 minute:
+                                <input type="radio" id="bidTime1" class="radioButton" name="time" >
+                            </label>
+                            <br>
+                            <label for="bidTime5" class="formLabels">5 minutes:
+                                <input type="radio" id="bidTime5" class="radioButton" name="time">
+                            </label>
+                            <br> 
+                            <label for="bidTime10" class="formLabels">10 minutes:
+                                <input type="radio" id="bidTime10" class="radioButton" name="time">
+                            </label>
+                            <br />
+                            <br />
+                            <label for="itemFile" class="formLabels">
+                                <input type="file" name="upload" id="itemFile">
+                            </label>
+                            <input type="submit" value="Post" id="formButton">
+                        </form>
                     </div>
                 </div>
                 <div class="chatDiv">
                    <div class="chat">
                         <div class="chatHistory" id="chatHistory">
-                            {{chatHistory}}
+                           <!-- dummy auctionpost for formatting stuff -->
+                            <!--  <div class="auctionPost">
+                                <hr>
+                                <b>Penguin for Sale!</b>
+                                <br />
+                                <img class="auctionImage" src="https://i.natgeofe.com/k/88de42b8-764c-40d2-89ee-e72d55dc95b8/emperor-penguin-chicks.jpg" />
+                                <p>Emperor penguin chicks</p>
+                                <p>Current highest bid: $600000000000000.00</p>
+                                <p>Current leader: APenguinStan </p>
+                                <p>Time Remaining: 30 seconds</p>
+                                <label for="makeBid">
+                                    <input id="makeBid" name="makeBid" type="text">
+                                </label>
+                                <button id="sendBid">Send</button>
+                                <hr>
+                            </div>
+     -->
                         </div>
-                        <hr />
-                        <div class="chatForm">
-                            <label>Title:
-                                <input id="titleBox" type="text">
-                            </label>
-                            <label>Message
-                                <input id="messageBox" type="text">
-                            </label>
-                            {% if username is defined %}
-                            <button id="sendMessage"onclick="sendPost()">Send</button>
-                            {% else %}
-                            <button id="sendMessage">Send</button>
-                            {% endif %}
-                        </div>
-
                    </div>
                 </div>
             </div>
