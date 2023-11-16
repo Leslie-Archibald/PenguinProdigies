@@ -243,9 +243,10 @@ def startTimer(auctionID):
     #I dont think we need this
     totTime = int(time.time())+15
 
+totTime = int(time.time()) + 60
 @socket.on("get-time")
-def giveTime(auctionID):
-    totTime = auctions_collection.find_one({"auction id":auctionID})["end time"]
+def giveTime():#auctionID
+    #totTime = auctions_collection.find_one({"auction id":auctionID})["end time"]
     socket.emit('time-left',(totTime)-int(time.time()) )
 
 @socket.on("get-info")

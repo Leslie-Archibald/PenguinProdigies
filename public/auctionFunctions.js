@@ -7,7 +7,7 @@ function joinAuction(){
     });
     sock.on('connect',(data)=>{
         console.log("Connection Success");
-    })
+    });
     sock.on('time-left',(data)=>{
         var elem = document.getElementById("time-left");
         elem.innerHTML = "Time Left: "+data;
@@ -16,6 +16,12 @@ function joinAuction(){
             clearInterval(timerID);
             timerID = null;
         }
+    });
+    sock.on("info-response",(data)=>{
+        info = JSON(data)
+        console.log(info)
+        document.getElementById("")
+        //WORK HERE!!!
     })
     console.log("Got here");
     return;
