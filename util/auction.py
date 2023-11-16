@@ -28,9 +28,10 @@ def auction_submit_response(request, conn):
     db_insert_dict = {
         'title': form.get('title'),
         'description': form.get('description'),
-        'starting bid': form.get('bid'),
-        'end time': form.get('time'),
-        'auction owner': username,
+        'bid': form.get('bid'),
+        'time': form.get('time'),
+        'auction_owner': username,
+        'image': request.files.get('upload').filename
     }
     file = request.files.get('upload')
     allowed_filetype = '.' in file.filename and \
@@ -56,9 +57,10 @@ def auction_display_response(conn):
     db_cursor = auctiondb.find({})
     display_fields = []
     for i in db_cursor:
+        print(i['_id'])
         print('item in display_fields', i)
         display_fields.append(
-            {'id': str(i['_id']), 'title': i['title'], 'image': i['image'], 'description': i['description'], 'bid': i.get('bid', ''), 'winner': i.get('winner', ''), 'time': i.get('time', '')}
+            {'id': str(i['_id']), 'title': i.get('title'), 'image': i.get('image'), 'description': i.get('description'), 'bid': i.get('bid'), 'winner': i.get('winner'), 'time': i.get('time')}
         )
             
     print('display_fields', display_fields)
