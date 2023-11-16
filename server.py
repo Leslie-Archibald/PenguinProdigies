@@ -17,7 +17,7 @@ from util.auction import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-#client = MongoClient('localhost')
+# client = MongoClient('localhost')
 client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
@@ -55,7 +55,7 @@ def auction():
 @app.route("/user/<user>", methods = ['GET', 'POST'])
 def user_Home(user):
     if authentication.get_user(conn) == user:
-        return render_template('index.html', username=user)
+        return render_template('index.html', username=user, auctionPosts=auction_display_response(conn))
     else:
         return render_template('errormsg.html', 
                                msg='token not found --invalid access')
@@ -223,10 +223,14 @@ def profile():
     response.mimetype = "text/html"
     return response
 @app.route('/auction-div', methods=['POST'])
-def auction_Post():
-    print('request.form', request.form)
-    print('request.files', request.files)
-    return auction_response(request, conn)
+def auction_Submit():
+    return auction_submit_response(request, conn)
+
+@app.route('/auction-add')
+def auction_display():
+    username = authentication.get_user(conn)
+    auctionPosts = auction_display_response(conn)
+    return redirect(url_for('user_Home', user=username))
     
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WebSocket Paths
