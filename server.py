@@ -9,11 +9,12 @@ from flask_bcrypt import Bcrypt
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
-
+from util.auction import * 
+from util.profile import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
+#client = MongoClient('localhost')
 client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
@@ -21,10 +22,13 @@ likes_collection = conn["likes"]
 auc_collection = conn["auc"]
 
 
-directory = directory = os.path.dirname(__file__)
-#relative_Path = flask.Request.path
-#relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
+# dummy auction inserts 
+# auc_collection.insert_one({"auction owner": "betty", "title": "Pokemon Cards", "auction id": "1", "description": "a pack of Pokemon cards, opened", "image": "", "start time": "1 minute", "starting bid": "5", "winning bid": "10", "winner": "annie"})
+# auc_collection.insert_one({"auction owner": "annie", "title": "penguin plush", "auction id": "2", "description": "a plush of a penguin", "image": "", "start time": "5 minutes", "starting bid": "10", "winning bid": "15", "winner": "cathy"})
 
+directory = directory = os.path.dirname(__file__)
+
+# route to index page when user is not logged in 
 @app.route("/", methods=['GET', 'POST'])
 def home():
     myResponse = make_response(render_template('index.html'))
@@ -42,7 +46,7 @@ def home():
 @app.route("/user/<user>", methods = ['GET', 'POST'])
 def user_Home(user):
     if authentication.get_user(conn) == user:
-        return render_template('index.html', username=user)
+        return render_template('index.html', username=user, auctionPosts=auction_display_response(conn))
     else:
         return render_template('errormsg.html', 
                                msg='token not found --invalid access')
@@ -200,38 +204,22 @@ def like_response():
     return(history_response() )
 @app.route('/profile')
 def profile():
-   
     username = authentication.get_user(conn)
-    won_cursor = auc_collection.find({"winner": username})
-    create_cursor = auc_collection.find({"auction owner": username})
-    tempWon = "["
-    tempCreate = "["
-
-    for won in won_cursor:
-        tempWon += dumps(won)
-        tempWon += ", "
-    #endFor
-    tempWon = tempWon.strip(", ")
-    tempWon += "]"
-    won_json = tempWon
-
-    for auc in create_cursor:
-        tempCreate += dumps(auc)
-        tempCreate += ", "
-    #endFor
-    tempCreate = tempCreate.strip(", ")
-    tempCreate += "]"
-    create_json = tempCreate
-
-    won_json = won_json.encode()
-    create_json = create_json.encode()
-
-
-    response = make_response(render_template('profile.html', username=username))
+    response = make_response(render_template('profile.html', username=username, createdAuction=display_created(conn, username), wonAuctions=display_winners(conn, username)))
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "text/html"
     return response
 
-    
+@app.route('/auction-div', methods=['POST'])
+def auction_Submit():
+    return auction_submit_response(request, conn)
+
+@app.route('/auction-add')
+def auction_display():
+    username = authentication.get_user(conn)
+    auctionPosts = auction_display_response(conn)
+    return redirect(url_for('user_Home', user=username))
+
+
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
