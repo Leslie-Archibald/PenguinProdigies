@@ -6,10 +6,15 @@
     <head>
     </head>
     <body>
-        <div class="auctionInfo" onload="joinAuction();">
-            <button onclick="joinAuction();">Join Auction</button>
-            <button onclick="sendMessage('Hello World!');">Send msg</button>
-            <button onclick="timer();">Start Timer</button>
+        <div class="auctionPost" id="{{id}}">
+            <hr>
+                <b>{{title}}</b><br />
+                <img class="auctionImage" src="{{image}}" />
+                <p>{{description}}</p>
+                <p id="currBid">Current highest bid: {{bid}}</p>
+                <p id="currLeader">Current leader: {{winner}}</p>
+                <p id="timer">Time Remaining: this needs to be implemented with web sockets!</p>
+            <hr>
         </div>
         <div id="time-left"></div>
     </body>

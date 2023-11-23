@@ -25,7 +25,7 @@ likes_collection = conn["likes"]
 auction_collection = conn[constants.DB_AUCTION]
 
 auctions_collection = conn["auctions"]
-auctions_collection.insert_one({"auction owner":"coolUser","title":"coolTitle","auction id":1234,"duration":"5","starting bid":"50","winning bid":""})
+#auctions_collection.insert_one({"auction owner":"coolUser","title":"coolTitle","auction id":1234,"duration":"5","starting bid":"50","winning bid":""})
 
 socket = SocketIO(app)
 
@@ -46,9 +46,16 @@ def home():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
-@app.route("/auction", methods=['GET', 'POST'])
-def auction():
-    myResponse = make_response(render_template('auctionBasic2.html'))
+@app.route("/joinAuc/<aucID>", methods=['GET', 'POST'])
+def auction(aucID):
+    item=getAucInfo(aucID,conn)
+    servTitle=item.get("title","Title not found")
+    servImg = item.get("image")
+    servDesc=item.get("description","Description not found")
+    servBid=item.get("bid","Highest bid could not be found")
+    servWinner=item.get("winner","")
+
+    myResponse = make_response(render_template('auctionBasic2.html', id=aucID, title=servTitle, image=servImg, description=servDesc, bid=servBid, winner=servWinner ) )
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
