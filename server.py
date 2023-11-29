@@ -12,9 +12,22 @@ from util.likes import *
 from util.auction import *
 
 app = Flask(__name__, template_folder='public')
+
+from dotenv import load_dotenv   #for python-dotenv method
+from flask_mail import Mail, Message
+load_dotenv()                    #for python-dotenv method
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+# client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]

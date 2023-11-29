@@ -6,3 +6,4 @@ DB_AUCTION = 'auctions'
 
 IMG_FILE_FORMATS = {'jpg', 'png', 'jpeg'}
 
+ 
