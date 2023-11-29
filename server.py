@@ -204,12 +204,27 @@ def like_response():
     return(history_response() )
 @app.route('/profile')
 def profile():
+    print("in profile branch")
     username = authentication.get_user(conn)
+    print("got this username" + username)
     createdAuctions = display_created(conn, username)
+    print("found these auctions for created ones: ")
+    print(createdAuctions)
     wonAuctions = display_winners(conn, username)
+    print("found these auctions for won ones")
+    print(wonAuctions)
 
     return render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions)
-    
+@app.route('/won-history')
+def wonHistory():
+    username = authentication.get_user(conn)
+    auc_cur = auc_collection.find({"winner": username})
+    temp = "["
+
+    for i in auc_cur: 
+            
+
+
 @app.route('/auction-div', methods=['POST'])
 def auction_Submit():
     return auction_submit_response(request, conn)

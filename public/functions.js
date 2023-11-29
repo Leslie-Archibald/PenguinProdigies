@@ -113,9 +113,6 @@ function sendAuction(){
         }
     }
 
-    // TODO: get and attach file information to post request 
-
-
     // username = auction creator, id = post id
     const username = document.getElementById('userid').innerText;
     const id = this.crypto.randomUUID();
@@ -150,4 +147,12 @@ function auctionMessageHTML(messageJSON){
 function joinAuction(postID){
     newPath = "/auction"+postID;
     location.assign(newPath);
+}
+
+// todo: write create auc display to call the various parts of messagejson 
+
+function createAucDisplay(){
+    // todo: 
+
+
 }
