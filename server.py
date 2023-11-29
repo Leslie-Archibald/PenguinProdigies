@@ -205,11 +205,11 @@ def like_response():
 @app.route('/profile')
 def profile():
     username = authentication.get_user(conn)
-    response = make_response(render_template('profile.html', username=username, createdAuction=display_created(conn, username), wonAuctions=display_winners(conn, username)))
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.mimetype = "text/html"
-    return response
+    createdAuctions = display_created(conn, username)
+    wonAuctions = display_winners(conn, username)
 
+    return render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions)
+    
 @app.route('/auction-div', methods=['POST'])
 def auction_Submit():
     return auction_submit_response(request, conn)
