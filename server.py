@@ -9,6 +9,9 @@ from flask_bcrypt import Bcrypt
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
+from util.auction import * 
+from util.profile import *
+from util.likes import *
 from util.auction import *
 
 app = Flask(__name__, template_folder='public')
@@ -26,8 +29,7 @@ app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
 bcrypt = Bcrypt(app)
-client = MongoClient('localhost')
-# client = MongoClient('mongo')
+client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
@@ -35,9 +37,8 @@ auction_collection = conn[constants.DB_AUCTION]
 
 
 directory = directory = os.path.dirname(__file__)
-#relative_Path = flask.Request.path
-#relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
+# route to index page when user is not logged in 
 @app.route("/", methods=['GET', 'POST'])
 def home():
     myResponse = make_response(render_template('index.html'))
@@ -213,11 +214,12 @@ def like_response():
     return(history_response() )
 @app.route('/profile')
 def profile():
-    response = make_response(render_template('profile.html'))
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.mimetype = "text/html"
-    return response
+    username = authentication.get_user(conn)
+    createdAuctions = display_created(conn, username)
+    wonAuctions = display_winners(conn, username)
 
+    return render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions)
+    
 @app.route('/auction-div', methods=['POST'])
 def auction_Submit():
     return auction_submit_response(request, conn)
@@ -227,6 +229,7 @@ def auction_display():
     username = authentication.get_user(conn)
     auctionPosts = auction_display_response(conn)
     return redirect(url_for('user_Home', user=username))
-    
+
+
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+    <!-- meta tags -->
+    <meta charset="UTF-8">
+    <meta name="author" content="Leslie, Ryan, Solomon, Winston">
+    <meta name="description" content="CSE312 project by Penguin Prodigies group, auction page">
+
+    <title>Super Epic Auction Page</title>
+    <link rel="stylesheet" href="/auctionstyles.css" type="text/css">
+    </head>
+    <body class="flexBox">
+        <div class="banner flexBox">
+            <h1 id="navTitle" class="flexItem"> Super Amazing Website :O</h1>
+            <div class="navbar flexNavBar">
+                <a class="navLink flexItem" href="/index">home</a>
+                <a class="navLink flexItem" href="/profile">user profile</a>
+                <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
+                <a class="navLink flexItem" href="/logout">logout</a>
+            </div>
+        </div>
+        <div class="pageContents flexBox auctionFlex">
+            <div class="flexItem flexBox auctionFrame">
+                <div class="flexItem auctionInfo" id="auctionInfo">
+                    {% if title && auctionOwner is defined %}
+                    <h1 id="auctionTitle"> {{title}} </h1>
+                    <h2>for sale by {{auctionOwner}} </h2>
+                    {% endif %}
+                    <br />
+                    {% if sourcePath is defined %}
+                    <img src={{sourcePath}} id="auctionImage" class="auctionImage"/>
+                    {% endif %}
+                    <br />
+                    {% if bid is defined && time != 0 %}
+                    <span id="bidSpan" class="auctionSpan">Current bid: {{bid}} </span>
+                    {% else %}
+                    <span id="bidSpan" class="auctionSpan">Winning bid: {{bid}}</span>
+                    {% endif %}
+                    <br />
+                    {% if winner is defined && time != 0 %}
+                    <span id="winnerSpan" class="auctionSpan">Current Leader: {{winner}} </span>
+                    {% else %}
+                    <span id="winnerSpan" class="auctionSpan">Winner: {{winner}} </span>
+                    {% endif %}
+                    <br />
+                    {% if time is defined %}
+                    <span id="timeSpan" class="auctionSpan">Time Remaining: {{time}} seconds</span>
+                    {% endif %}
+                    <br />
+                    {% if time is defined && time != 0 %}
+                    <label for="sendBid" class="aucLabel">
+                        <input type="text" name="sendBid" id="sendBid">
+                    </label>
+                    <input type="submit" value="Bid" id="bidButton" class="aucButton"<
+                    {% else %}
+                    <span id="closedSpan" class="auctionSpan"> The auction has been completed, no new bids will be accepted</span>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        
+    </body>
+</html>

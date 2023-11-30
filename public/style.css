@@ -163,20 +163,3 @@ h3{
 .formLabels{
     font-size: 20px;
 }
-
-/* auction post styling   */
-.auctionPost{
-    height: auto;
-    width: auto;
-}
-
-.auctionImage{
-    height: 200px;
-    width: 300px;
-    border-radius: 1px;
-    border-color: steelblue;
-}
-
-#sendBid{
-    margin-bottom: 5px;
-}

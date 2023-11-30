@@ -5,7 +5,7 @@ import util.constants as constants
 import hashlib
 
 # use of flask_bcrypt from https://www.geeksforgeeks.org/password-hashing-with-bcrypt-in-flask/
-def register(username, password, conn, bcrypt):
+def register(username, password, email, conn, bcrypt):
     db = conn[constants.DB_USERS]
     print('------FORM DETAILS-------', username, password)
     pass_encrypted = bcrypt.generate_password_hash(password).decode()
@@ -27,7 +27,9 @@ def register(username, password, conn, bcrypt):
         m.update(auth.encode())
         db.insert_one({'username': username, 
                     'password': pass_encrypted, 
-                    'auth': m.digest()}
+                    'auth': m.digest(),
+                    'email': email,
+                    'verified': False}
                     )
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = 'text/html; charset=utf-8'
