@@ -214,16 +214,44 @@ def profile():
     print("found these auctions for won ones")
     print(wonAuctions)
 
-    return render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions)
-@app.route('/won-history')
-def wonHistory():
+    return render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=False)
+@app.route('/win-history')
+def winHistory():
     username = authentication.get_user(conn)
     auc_cur = auc_collection.find({"winner": username})
     temp = "["
 
     for i in auc_cur: 
-            
+        temp += dumps(i) 
+        temp += ", " 
+    #endFor
 
+    temp.strip(", ")
+    temp += "]"
+    json_data = temp
+    response = flask.make_response(json_data.encode()) 
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.mimetype = "applicaton/json; charset=utf-8"
+    return response
+
+@app.route("/creation-history")
+def createHistory():
+    username = authentication.get_user(conn)
+    auc_cur = auc_collection.find({"winner": username})
+    temp = "["
+
+    for i in auc_cur: 
+        temp += dumps(i) 
+        temp += ", " 
+    #endFor
+
+    temp.strip(", ")
+    temp += "]"
+    json_data = temp
+    response = flask.make_response(json_data.encode()) 
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.mimetype = "applicaton/json; charset=utf-8"
+    return response
 
 @app.route('/auction-div', methods=['POST'])
 def auction_Submit():

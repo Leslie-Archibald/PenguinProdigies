@@ -8,7 +8,7 @@
         <title>Super Epic CSE312 Website</title>
         <link rel="stylesheet" href="/profilestyles.css" type="text/css">
     </head>
-    <body class="flexBox" onload="createAucDisplay()">
+    <body class="flexBox" onload="createAucDisplay();">
         <!-- banner and navbar stuff-->
         <div class="flexBox">
             <div class="flexBox banner">
@@ -58,9 +58,9 @@
                     <h3 id="winTitle" class="divTitle">Auctions Won</h3>    
                     <hr />
                     <div class="winHistory" id="winHistory">
-                        {% if wonAuctions is defined %}
+                        
                         {{wonAuctions}}
-                        {% endif %}
+                        
                     </div>
                 </div>
             </div>
