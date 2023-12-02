@@ -5,6 +5,8 @@ import os
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 import util.authentication as authentication
 import util.constants as constants
@@ -21,10 +23,8 @@ chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 auc_collection = conn["auc"]
 
+limiter = Limiter(app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
 
-# dummy auction inserts 
-# auc_collection.insert_one({"auction owner": "betty", "title": "Pokemon Cards", "auction id": "1", "description": "a pack of Pokemon cards, opened", "image": "", "start time": "1 minute", "starting bid": "5", "winning bid": "10", "winner": "annie"})
-# auc_collection.insert_one({"auction owner": "annie", "title": "penguin plush", "auction id": "2", "description": "a plush of a penguin", "image": "", "start time": "5 minutes", "starting bid": "10", "winning bid": "15", "winner": "cathy"})
 
 directory = directory = os.path.dirname(__file__)
 
@@ -262,6 +262,8 @@ def auction_display():
     username = authentication.get_user(conn)
     auctionPosts = auction_display_response(conn)
     return redirect(url_for('user_Home', user=username))
+
+
 
 
 if __name__ == "__main__":
