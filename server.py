@@ -5,30 +5,26 @@ import os
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
-from util.auction import * 
-from util.profile import *
+from util.auction import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-#client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+# client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
-auc_collection = conn["auc"]
-
-limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
+auction_collection = conn[constants.DB_AUCTION]
 
 
 directory = directory = os.path.dirname(__file__)
+#relative_Path = flask.Request.path
+#relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
-# route to index page when user is not logged in 
 @app.route("/", methods=['GET', 'POST'])
 def home():
     myResponse = make_response(render_template('index.html'))
@@ -204,53 +200,9 @@ def like_response():
     return(history_response() )
 @app.route('/profile')
 def profile():
-    print("in profile branch")
-    username = authentication.get_user(conn)
-    print("got this username" + username)
-    createdAuctions = display_created(conn, username)
-    print("found these auctions for created ones: ")
-    print(createdAuctions)
-    wonAuctions = display_winners(conn, username)
-    print("found these auctions for won ones")
-    print(wonAuctions)
-
-    return render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=False)
-@app.route('/win-history')
-def winHistory():
-    username = authentication.get_user(conn)
-    auc_cur = auc_collection.find({"winner": username})
-    temp = "["
-
-    for i in auc_cur: 
-        temp += dumps(i) 
-        temp += ", " 
-    #endFor
-
-    temp.strip(", ")
-    temp += "]"
-    json_data = temp
-    response = flask.make_response(json_data.encode()) 
+    response = make_response(render_template('profile.html'))
     response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.mimetype = "applicaton/json; charset=utf-8"
-    return response
-
-@app.route("/creation-history")
-def createHistory():
-    username = authentication.get_user(conn)
-    auc_cur = auc_collection.find({"winner": username})
-    temp = "["
-
-    for i in auc_cur: 
-        temp += dumps(i) 
-        temp += ", " 
-    #endFor
-
-    temp.strip(", ")
-    temp += "]"
-    json_data = temp
-    response = flask.make_response(json_data.encode()) 
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.mimetype = "applicaton/json; charset=utf-8"
+    response.mimetype = "text/html"
     return response
 
 @app.route('/auction-div', methods=['POST'])
@@ -262,9 +214,6 @@ def auction_display():
     username = authentication.get_user(conn)
     auctionPosts = auction_display_response(conn)
     return redirect(url_for('user_Home', user=username))
-
-
-
-
+    
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
