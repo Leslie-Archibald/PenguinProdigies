@@ -23,7 +23,7 @@ chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 auc_collection = conn["auc"]
 
-limiter = Limiter(app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
+limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
 
 
 directory = directory = os.path.dirname(__file__)
