@@ -13,8 +13,8 @@ from util.auction import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-client = MongoClient('localhost')
-# client = MongoClient('mongo')
+# client = MongoClient('localhost')
+client = MongoClient('mongo')
 from util.auction import * 
 from util.profile import *
 from util.likes import *
