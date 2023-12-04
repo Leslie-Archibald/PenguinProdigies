@@ -210,4 +210,11 @@ function profileAucHTML(messageJSON){
     aucHTML += "</div>";
 
     return aucHTML
+
+}
+    
+function sendVerification(){
+    const request = new XMLHttpRequest();
+    request.open("POST", "/send-email");
+    request.send();
 }

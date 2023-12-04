@@ -15,6 +15,26 @@ app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
 client = MongoClient('localhost')
 # client = MongoClient('mongo')
+from util.auction import * 
+from util.profile import *
+from util.likes import *
+from util.auction import *
+
+app = Flask(__name__, template_folder='public')
+
+from dotenv import load_dotenv   #for python-dotenv method
+from flask_mail import Mail, Message
+load_dotenv()                    #for python-dotenv method
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME") + "@gmail.com"
+app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
+bcrypt = Bcrypt(app)
+client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
@@ -97,7 +117,8 @@ def register():
 def register_Action():
     username = request.form.get('username')
     password = request.form.get('password')
-    myResponse = authentication.register(username, password, conn, bcrypt)
+    email = request.form.get('email')
+    myResponse = authentication.register(username, password, email, conn, bcrypt)
     if myResponse == None:
         # return render_template('register.html', known_user=True)
         return render_template('errormsg.html', msg='This username is already taken', redirect='/')
@@ -200,11 +221,12 @@ def like_response():
     return(history_response() )
 @app.route('/profile')
 def profile():
-    response = make_response(render_template('profile.html'))
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.mimetype = "text/html"
-    return response
+    username = authentication.get_user(conn)
+    createdAuctions = display_created(conn, username)
+    wonAuctions = display_winners(conn, username)
 
+    return render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=authentication.is_verified(username, conn))
+    
 @app.route('/auction-div', methods=['POST'])
 def auction_Submit():
     return auction_submit_response(request, conn)
@@ -214,6 +236,43 @@ def auction_display():
     username = authentication.get_user(conn)
     auctionPosts = auction_display_response(conn)
     return redirect(url_for('user_Home', user=username))
+
+@app.route('/send-email', methods=['POST'])
+def send_email():
+    username = authentication.get_user(conn)
+    createdAuctions = display_created(conn, username)
+    wonAuctions = display_winners(conn, username)
+
+    response = make_response(render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=authentication.is_verified(username, conn)))
+    cookieName = constants.COOKIE_AUTH_TOKEN
+    token = flask.request.cookies.get(cookieName)
+    db = conn[constants.DB_TOKENS]
+    db.insert_one({'username': authentication.get_user(conn), 'token': token})
+    link = "http://localhost:8080/email-verification" + '?token=' + token 
+    msg = Message('Email Verification', sender=os.environ.get('MAIL_USERNAME')+"@gmail.com", recipients=[authentication.get_email(conn, username)])
+    msg.body = link
+    mail.send(msg)
+
+    return response
+
+@app.route('/email-verification', methods=['GET'])
+def verify_user():
+    username = authentication.get_user(conn)
+    if username == None:
+        return render_template('errormsg.html', msg='User not found', redirect='/')
+
+    cookieName = constants.COOKIE_AUTH_TOKEN
+    token = flask.request.cookies.get(cookieName)
+    if flask.request.args.get('token') != token:
+        return render_template('errormsg.html', msg='User unauthorized', redirect='/')
     
+    db = conn[constants.DB_USERS]
+    db.update_one({'username': username}, {"$set": {'verified': True}})
+    createdAuctions = display_created(conn, username)
+    wonAuctions = display_winners(conn, username)
+    response = make_response(render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=authentication.is_verified(username, conn)))
+    return redirect('/profile',307,response)
+
+
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8080)
