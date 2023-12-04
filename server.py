@@ -253,10 +253,16 @@ def submitBid(aucID):
     if(auction != None):
         currHighest = int(auction.get("bid","0"))
         userBid = request.get_data().decode().split("=")[1].strip()
-        if(int(userBid) > currHighest):
-            auction_collection.update_one({"auction id":aucID},{"$set":{"winner":user,"bid":userBid}})
-            response = flask.make_response("Successful")
-    
+        userBidInt = -1
+        try:
+            userBidInt = int(userBid)
+            if( (int(auction.get("timeSeconds")) - int(time.time()) ) <= 0):
+                response = flask.make_response("Auction Ended")
+            elif(int(userBid) > currHighest):
+                auction_collection.update_one({"auction id":aucID},{"$set":{"winner":user,"bid":userBid}})
+                response = flask.make_response("Successful")
+        except:
+            response = flask.make_response("Only enter whole numbers for your bids")
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.mimetype = "text/plain"
 
