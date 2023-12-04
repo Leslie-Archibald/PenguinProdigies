@@ -13,12 +13,13 @@ import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
 from util.auction import *
-
+import json
+import bson
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-client = MongoClient('localhost')
-#client = MongoClient('mongo')
+#client = MongoClient('localhost')
+client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
@@ -79,7 +80,7 @@ def form_css():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
-@app.route('/auctionFunctions.js')
+@app.route('/joinAuc/auctionFunctions.js')
 def auctionFunctions_js():
     myResponse = flask.send_from_directory('public','auctionFunctions.js')
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
@@ -92,7 +93,7 @@ def profile_css():
     myResponse.mimetype = "text/css"
     return myResponse
 
-
+@app.route("/joinAuc/functions.js")
 @app.route("/user/functions.js")
 @app.route("/functions.js")
 def home_js():
@@ -238,13 +239,34 @@ def auction_display():
     username = authentication.get_user(conn)
     auctionPosts = auction_display_response(conn)
     return redirect(url_for('user_Home', user=username))
+@app.route('/joinAuc/<path:aucID>/submitBid', methods=["POST"])
+def submitBid(aucID):
+    user = authentication.get_user(conn)
+    auction = None
+    response = flask.make_response("Failed")
+    if(user != None):
+        auction = auction_collection.find_one({"auction id":aucID})
+        if(user == auction.get("auction_owner")):
+            response = flask.make_response("Cannot make a bid on your auction")
+            auction = None
+
+    if(auction != None):
+        currHighest = int(auction.get("bid","0"))
+        userBid = request.get_data().decode().split("=")[1].strip()
+        if(int(userBid) > currHighest):
+            auction_collection.update_one({"auction id":aucID},{"$set":{"winner":user,"bid":userBid}})
+            response = flask.make_response("Successful")
     
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.mimetype = "text/plain"
+
+    return response
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WebSocket Paths
 
 @socket.on("connect")
 def handleOpen():
-    socket.send("Ligma Balls")
+    socket.emit("connect","1")
 
 @socket.on("message")
 def handleMsg(msg):
@@ -255,26 +277,49 @@ def startTimer(auctionID):
     totTime = int(time.time())+15
 
 totTime = int(time.time()) + 60
-@socket.on("get-time")
+@socket.on("getTime")
 def giveTime():#auctionID
     #totTime = auctions_collection.find_one({"auction id":auctionID})["end time"]
     socket.emit('time-left',(totTime)-int(time.time()) )
 
-@socket.on("get-info")
+@socket.on("getInfo")
 def giveInfo(auctionID):
     info = getAucInfo(auctionID,conn)
-    socket.emit("info-response",info)
+    info["timeSeconds"] = str(int(info["timeSeconds"]) - int(time.time()))
+    sendInfo = "{"
+    for key in info.keys():
+        if(key == "_id"):
+            continue
+        value = info[key]
+        if(value == ""):
+            value = "None"
+        sendInfo += "\""+key+"\"" + ":"+"\""+value+"\""
+        sendInfo +=","
+    if(sendInfo[-1] == ","):
+        #print("removed trailing ,")
+        sendInfo = sendInfo[:-1]
+    sendInfo += "}"
+    #info = bson.decode(info)
+    #print("Sent info the client: ",sendInfo,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    socket.emit("info-response",sendInfo)
 
-@socket.on("place-bid")
-def placeBid(data):
-    #expecting: [auctionID,bid]
-    currHighest = auctions_collection.find_one({"auction id":data[0]})["winning bid"]
-    if(int(data[1]) > int(currHighest) ):
-        username = authentication.get_user(conn)
-        auctions_collection.update_one({"auction id":data[0]},{"winning bid":data[1],"winner":username})
-        socket.emit("bid-response","Success")
-    else:
-        socket.emit("bid-response","Failed")
+@socket.on("submitBid")
+def submitBid(data):
+    bidInfo = json.loads(data)
+    print(data,"##############################################")
+    print(bidInfo,"~~~~~~~~~~~~~~~~~~")
+    currHighest = auctions_collection.find_one({"auction id":bidInfo["aucID"]}).get("winning bid","0")
+    user = conn[constants.DB_USERS].find_one({"auth":bidInfo["auth"]})
+    if(user == None):
+        #invalid auth token, send client a "0"
+        socket.emit("bid-response","0")
+        return
+    
+    if(int(currHighest) < int(bidInfo["bidAmount"]) ):
+        #update the DB and send the client a "1"
+        socket.emit("bid-response","1")
+        #WORK HERE!!!
+        auction_collection.update_one({"auction id":bidInfo["aucID"]},{"$set":{"winner":user.get("username"),"bid":bidInfo["bidAmount"]}})
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

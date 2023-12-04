@@ -31,8 +31,9 @@ def auction_submit_response(request, conn):
     cookieName = constants.COOKIE_AUTH_TOKEN
     authToken = request.cookies.get(cookieName)
     salt = bcrypt.gensalt()
-    aucID = bcrypt.hashpw((str(time.time())+authToken).encode(),salt)[-10:-1]#takes the last 10 chars of the generated hash and uses that for the aucID
+    aucID = bcrypt.hashpw((str(time.time())+authToken).encode(),salt).decode()[-10:-1]#takes the last 10 chars of the generated hash and uses that for the aucID
     print(aucID)
+    aucID = aucID.replace("/","M").replace("\\","N")
 
     ending = time.localtime(int(endTime))
     month = MONTHS.get(ending.tm_mon,"NULL")
@@ -51,7 +52,8 @@ def auction_submit_response(request, conn):
         'time': timeStr,
         'timeSeconds': endTime,
         'auction_owner': username,
-        'image': request.files.get('upload').filename
+        'image': request.files.get('upload').filename,
+        'winner': ""
     }
     file = request.files.get('upload')
     allowed_filetype = '.' in file.filename and \

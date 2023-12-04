@@ -35,13 +35,11 @@
                     <img src={{sourcePath}} id="auctionImage" class="auctionImage"/>
                     {% endif %}
                     <br />
-                    {% if bid is defined & time != 0 %}
-                    <span id="bidSpan" class="auctionSpan">Current bid: {{bid}} </span>
-                    {% else %}
+                    {% if bid is defined & time is defined %}
                     <span id="bidSpan" class="auctionSpan">Winning bid: {{bid}}</span>
                     {% endif %}
                     <br />
-                    {% if winner is defined & time != 0 %}
+                    {% if winner is defined & time is defined %}
                     <span id="winnerSpan" class="auctionSpan">Current Leader: {{winner}} </span>
                     {% else %}
                     <span id="winnerSpan" class="auctionSpan">Winner: {{winner}} </span>

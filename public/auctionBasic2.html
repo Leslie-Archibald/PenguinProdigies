@@ -2,20 +2,25 @@
 <html lang="en-US">
     <script src="functions.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-    <script src="auctionFunctions.js"></script>
     <head>
     </head>
-    <body>
-        <div class="auctionPost" id="{{id}}">
+    <script src="auctionFunctions.js"></script>
+    <body onload="joinAuction();">
+        <div class="auctionPost" id="auctionData" aucID="{{id}}">
             <hr>
                 <b>{{title}}</b><br />
                 <img class="auctionImage" src="{{image}}" />
                 <p>{{description}}</p>
                 <p id="currBid">Current highest bid: {{bid}}</p>
                 <p id="currLeader">Current leader: {{winner}}</p>
-                <p id="timer">Time Remaining: this needs to be implemented with web sockets!</p>
+                <p id="timer">Time Remaining: Fetching data...</p>
             <hr>
         </div>
-        <div id="time-left"></div>
+        <form action="/joinAuc/{{id}}/submitBid" id="bidForm" method="post">
+            <input type="submit" value="Submit Bid" id="formButton">
+            <label>
+                <input id="inputBid" name="inputBid" type="text/plain">
+            </label>
+        </form>
     </body>
 </html>
