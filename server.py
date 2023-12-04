@@ -5,7 +5,8 @@ import os
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
-
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
@@ -38,6 +39,7 @@ chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 auction_collection = conn[constants.DB_AUCTION]
 
+limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
