@@ -48,14 +48,14 @@ def auction_display_response(conn):
 
 def auction_format(title, postID, description, imgPath, bid, winner, time):
     auctionHTML =  '<div class="auctionPost" id="' + postID  + '">'
-    auctionHTML += '<hr>';
-    auctionHTML += '<b>' + title + '</b>';
-    auctionHTML += '<br />';
-    auctionHTML += '<img class="auctionImage" src="' + imgPath + '" />';
+    auctionHTML += '<hr>'
+    auctionHTML += '<b>' + title + '</b>'
+    auctionHTML += '<br />'
+    auctionHTML += '<img class="auctionImage" src="' + imgPath + '" />'
     auctionHTML += '<p>' + description + '</p>'
     auctionHTML += '<p id="currBid">Current highest bid: ' + bid  + "</p>"
-    auctionHTML += '<p id="currLeader">Current leader: ' + winner + '</p>';
-    auctionHTML += '<p id="timer">Time Remaining: '+ time + '</p>';
+    auctionHTML += '<p id="currLeader">Current leader: ' + winner + '</p>'
+    auctionHTML += '<p id="timer">Time Remaining: '+ time + '</p>'
     auctionHTML += '<label for="makeBid">' +\
             '<input id="makeBid" name="makeBid" type="text">' +\
             '</label>' +\

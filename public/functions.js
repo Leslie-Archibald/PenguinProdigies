@@ -92,31 +92,122 @@ function welcome() {
     setInterval(updateChat, 2000);
 }
 
-function showAuction(messageJSON){
-    const username = messageJSON["username"];
+function sendAuction(){
+    const itemBox = document.getElementById("itemName");
+    const item = itemBox.value;
+    itemBox.value = "";
+
+    const descripBox = document.getElementById("itemDescription")
+    const description = descripBox.value;
+    descripBox.value = "";
+
+    const bidBox = document.getElementById("startingBid")
+    const bid = bidBox.value;
+    bidBox.value = "";
+
+    const timeList = document.getElementsByName("time")
+    for (i = 0; i < timeList.length; i++){
+        if (timeList[i].checked){
+            const startTime = timeList[i].value;
+            timeList[i].checked = false;
+        }
+    }
+
+    // username = auction creator, id = post id
+    const username = document.getElementById('userid').innerText;
+    const id = this.crypto.randomUUID();
+    const messageJSON = {"title": item, "auction creator": username, "description": description, "id": id, "bid": bid, "time": time};
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            console.log(this.response);
+        }
+    }
+    request.open("POST", "/auction-message");
+    request.send(JSON.stringify(messageJSON));
+    titleTextBox.focus();
+    descriptionTextBox.focus();
+}   
+
+function auctionMessageHTML(messageJSON){
+    const username = messageJSON["username"]
     const title = messageJSON["title"];
     const postID = messageJSON["id"];
     const description = messageJSON["description"];
-    const bid = messageJSON["starting bid"];
-    const time = messageJSON["start time"];
+    const numLikes = messageJSON["numLikes"];
+    let messageHTML = "<br><button onclick='deleteMessage(" + title + ")'>X</button> ";
+    messageHTML +=  "<span id='" + postID + "'title='" + title + "'><b>" + username + "</b>: " + 
+                        "I'm selling " + title + "! "
+                        "<button className='joinAuctionButton' onClick=\"joinAuction(\'"+postID+"\')\">Join Auction!</button>" +
+                    "</span>";
+    return messageHTML;
+
+}
+
+function joinAuction(postID){
+    newPath = "/auction"+postID;
+    location.assign(newPath);
+}
+
+// todo: write create auc display to call the various parts of messagejson 
+
+function createAucDisplay(){
+    document.getElementById("reationTitle").style.color = "pink";
+    createJSON = createdHistory("creationHistory");
+    wonJSON = wonHistory("winHistory");
+}
+
+function createdHistory(divID){
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if (this.onreadystatechange == 4 && this.status == 200){
+            const messages = JSON.parse(this.response);
+            for (const message of messages) {
+                addAucToHistory(message, divID); 
+            }
+        }
+    }
+    request.open("GET", "/create-history");
+    request.send();
+}
+
+function wonHistory(divID){
+    const request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if (this.onreadystatechange == 4 && this.status == 200){
+            const messages = JSON.parse(this.response);
+            for (const message of messages) {
+                addAucToHistory(message, divID); 
+            }
+        }
+    }
+    request.open("GET", "/win-history");
+    request.send();
+}
+
+function addAucToHistory(messageJSON, divID){
+    const aucHistory = document.getElementById(divID)
+    aucHistory.innerHTML += profileAucHTML(messageJSON)
+    aucHistory.scrollIntoView(false)
+    aucHistory.scrollTop = aucHistory.scrollHeight - aucHistory.clientHeight
+}
+
+function profileAucHTML(messageJSON){
+    const creator = messageJSON["auction owner"];
     const winner = messageJSON["winner"];
-    const imgPath = messageJSON["image"];
+    const title = messageJSON["title"];
+    const description = messageJSON["description"];
+    const imagePath = messageJSON["image"];
+    const winningBid = messageJSON["winning bid"];
 
-    auctionHTML =  '<div class="auctionPost" id="' + postID  + '">';
-    auctionHTML += '<hr>';
-    auctionHTML += '<b>' + title + '</b>';
-    auctionHTML += '<br />';
-    auctionHTML += '<img class="auctionImage" src="' + imgPath + '" />';
-    auctionHTML += '<p>' + description + '</p>'
-    auctionHTML += '<p id="currBid">Current highest bid: ' + bid  + "</p>"
-    auctionHTML += '<p id="currLeader">Current leader: ' + winner + '</p>';
-    auctionHTML += '<p id="timer">Time Remaining: '+ time + '</p>';
-    auctionHTML += '<label for="makeBid">' +
-            '<input id="makeBid" name="makeBid" type="text">' +
-            '</label>' +
-            '<button id="sendBid">Send</button>' +
-            '<hr>' +
-            '</div>';
+    let aucHTML = "<div> <hr />";
+    aucHTML += "<h4>" + title + "</h4> <br />"
+    aucHTML += "<img src='"+ imagePath + "'class='profileImg' /><br />"
+    aucHTML += "<b><p>Sold by: </b>" + creator + "</p>"
+    aucHTML += "<b><p>Won by: </b>"+ winner + "</p>"
+    aucHTML += "<b><p>Winning Bid: </b>$" + winningBid + "</p>"
+    aucHTML += "<b><p>Description: </b>" + description + "</p>"
+    aucHTML += "</div>";
 
-    return auctionHTML;
-}   
+    return aucHTML
+}

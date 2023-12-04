@@ -5,18 +5,17 @@
         <meta charset="UTF-8">
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies user page">
-
         <title>Super Epic CSE312 Website</title>
         <link rel="stylesheet" href="/profilestyles.css" type="text/css">
     </head>
-    <body class="flexBox">
+    <body class="flexBox" onload="createAucDisplay();">
         <!-- banner and navbar stuff-->
         <div class="flexBox">
             <div class="flexBox banner">
                 <h1 id="navTitle" class="flexItem">Super Amazing User Page :O</h1>
                 <div class="navbar flexNavBar">
                     <a class="navLink flexItem" href="/visit-counter">cookie counter</a>
-                    <a class="navLink flexItem" href="/index">home page</a>
+                    <a class="navLink flexItem" href="/">home page</a>
                     <a class="navLink flexItem" href="/logout">log out</a>
                 </div>
             </div>
@@ -32,6 +31,14 @@
         <h2 class="userText">Stats</h2>
         {% endif %}
         <!-- <h2>Guest's Stats</h2> -->
+
+        {% if verified is defined %}
+            {% if verifed == true %}
+            <span>Your email has been verified</span>
+            {% else %}
+            <button>verify email</button>
+            {% endif %}
+        {% endif %}
         </div>
         <div class="flexBoxHor">
             <div class="creationFrame flexBox flexItem">
@@ -39,7 +46,9 @@
                     <h3 id="creationTitle" class="divTitle">Auctions Created</h3>
                     <hr />
                     <div class="creationHistory" id="creationHistory">
-
+                        
+                        {{createdAuction}}
+                        
                     </div>
                 </div>
             </div>
@@ -49,7 +58,9 @@
                     <h3 id="winTitle" class="divTitle">Auctions Won</h3>    
                     <hr />
                     <div class="winHistory" id="winHistory">
-
+                        
+                        {{wonAuctions}}
+                        
                     </div>
                 </div>
             </div>

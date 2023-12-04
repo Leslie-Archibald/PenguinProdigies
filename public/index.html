@@ -6,6 +6,8 @@
         <meta name="author" content="Leslie, Ryan, Solomon, Winston">
         <meta name="description" content="CSE312 project for the group Penguin Prodigies">
 
+        {% set chatHistory = '' %}
+
         <title>Super Epic CSE312 Webpage</title>
         <link rel="stylesheet" href="/style.css" type="text/css">
     </head>
@@ -37,11 +39,11 @@
                     <div class="auctionForm"> 
                         <br />
                         <br />
-                        <h3 id="formTite">Make an Auction!</h3>
+                        <h3 class="formTite">Make an Auction!</h3>
                         <form action="/auction-div" id="auctionForm" method="post" enctype="multipart/form-data">
                             
                             <label for="itemName" class="formLabels">Title:      
-                                <input type="text" id="itemName" name="title" class="formInput">
+                                <input type="text" id="itemName" name="item" class="formInput">
                             </label>
                             <br />
                             <label for="itemDescription" class="formLabels">Description: 
@@ -71,41 +73,32 @@
                             <label for="itemFile" class="formLabels">
                                 <input type="file" name="upload" id="itemFile">
                             </label>
-                            {% if username is defined %}
                             <input type="submit" value="Post" id="formButton">
-                            {% else %}
-                            <input type="button" value="Post" id="formButton">
-                            {% endif %}
                         </form>
+                        <br />
+                        <hr />
+                        <h3 class="formTitle">Send a Message</h3>
+                        <form id="chatForm"></form>
+                        <label for="titleBox" class="formLabels">Title:
+                            <input type="text" id="titleBox" name="titleBox">
+                        </label>
+                        <br />
+                        <label for="messageBox" class="formLabels"> Message:
+                            <input type="text" id="messageBox" name="messageBox">
+                        </label>
+                        <input type="submit" value="Post" id="formButton">
+                    </form>
                     </div>
                 </div>
                 <div class="chatDiv">
                    <div class="chat">
                         <div class="chatHistory" id="chatHistory">
-                           <!-- dummy auctionpost for formatting stuff -->
-                            <!--  <div class="auctionPost">
-                                <hr>
-                                <b>Penguin for Sale!</b>
-                                <br />
-                                <img class="auctionImage" src="https://i.natgeofe.com/k/88de42b8-764c-40d2-89ee-e72d55dc95b8/emperor-penguin-chicks.jpg" />
-                                <p>Emperor penguin chicks</p>
-                                <p>Current highest bid: $600000000000000.00</p>
-                                <p>Current leader: APenguinStan </p>
-                                <p>Time Remaining: 30 seconds</p>
-                                <label for="makeBid">
-                                    <input id="makeBid" name="makeBid" type="text">
-                                </label>
-                                <button id="sendBid">Send</button>
-                                <hr>
-                            </div>
-     -->
-                            {% for item in auctionPosts %}
-                                <div class="auctionPost" id="{{item.id}}"><hr><b>{{item.title}}</b><br /><img class="auctionImage" src="{{item.image}}" /><p>{{item.description}}</p><p id="currBid">Current highest bid: {{item.bid}}</p><p id="currLeader">Current leader: {{item.winner}}</p><p id="timer">Time Remaining: {{item.time}}</p><label for="makeBid"><input id="makeBid" name="makeBid" type="text"></label><button id="sendBid">Send</button><hr></div> 
-                            {% endfor %}
+                            {{chatHistory}}
                         </div>
                    </div>
                 </div>
             </div>
-        <script src="/functions.js"></script>
+        <script src="functions.js"></script>
+        </div>
     </body>
 </html>
