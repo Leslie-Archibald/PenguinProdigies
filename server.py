@@ -33,8 +33,6 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
 
-bcrypt = Bcrypt(app)
-client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
@@ -246,8 +244,6 @@ def send_email():
     response = make_response(render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=authentication.is_verified(username, conn)))
     cookieName = constants.COOKIE_AUTH_TOKEN
     token = flask.request.cookies.get(cookieName)
-    db = conn[constants.DB_TOKENS]
-    db.insert_one({'username': authentication.get_user(conn), 'token': token})
     link = "http://localhost:8080/email-verification" + '?token=' + token 
     msg = Message('Email Verification', sender=os.environ.get('MAIL_USERNAME')+"@gmail.com", recipients=[authentication.get_email(conn, username)])
     msg.body = link

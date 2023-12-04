@@ -8,11 +8,7 @@
         <title>Super Epic CSE312 Website</title>
         <link rel="stylesheet" href="/profilestyles.css" type="text/css">
     </head>
-<<<<<<< HEAD
     <body class="flexBox" onload="createAucDisplay();">
-=======
-    <body class="flexBox" onload="createAucDisplay()">
->>>>>>> email-verification
         <!-- banner and navbar stuff-->
         <div class="flexBox">
             <div class="flexBox banner">
@@ -36,19 +32,10 @@
         {% endif %}
         <!-- <h2>Guest's Stats</h2> -->
 
-<<<<<<< HEAD
-        {% if verified is defined %}
-            {% if verifed == true %}
-            <span>Your email has been verified</span>
-            {% else %}
-            <button>verify email</button>
-            {% endif %}
-=======
         {% if verified == true %}
         <span>Your email has been verified</span>
         {% else %}
         <button onclick="sendVerification()">verify email</button>
->>>>>>> email-verification
         {% endif %}
         </div>
         <div class="flexBoxHor">
@@ -69,15 +56,9 @@
                     <h3 id="winTitle" class="divTitle">Auctions Won</h3>    
                     <hr />
                     <div class="winHistory" id="winHistory">
-<<<<<<< HEAD
-                        
-                        {{wonAuctions}}
-                        
-=======
                         {% if wonAuctions is defined %}
                         {{wonAuctions}}
                         {% endif %}
->>>>>>> email-verification
                     </div>
                 </div>
             </div>
