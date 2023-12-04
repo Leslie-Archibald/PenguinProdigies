@@ -60,8 +60,8 @@ def login(username, password, conn, bcrypt):
 
 def generate_auth_token(response):
     auth = str(random.random())
-    # cookieName = constants.COOKIE_AUTH_TOKEN
-    # response.set_cookie(cookieName, auth, max_age=69420)
+    cookieName = constants.COOKIE_AUTH_TOKEN
+    response.set_cookie(cookieName, auth, max_age=69420)
     return auth
 
 def get_user(conn):
@@ -73,6 +73,7 @@ def get_user(conn):
     m = hashlib.sha256()
     m.update(authToken.encode())
     user = db.find_one({'auth': m.digest()})
+    print(user)
     if user == None:
         return None
     else:
@@ -84,3 +85,19 @@ def logout(conn, authToken):
     response.set_cookie('auth', '', max_age=0)
     db.update_one({'auth': hash(authToken)}, {"$pull": {'auth': hash(authToken)}})
     return response
+
+def is_verified(user, conn):
+    db = conn[constants.DB_USERS]
+    cur = db.find_one({'username': user})
+    if cur == None:
+        return None
+    else:
+        return cur['verified']
+
+def get_email(conn, user):
+    db = conn[constants.DB_USERS]
+    cur = db.find_one({'username': user})
+    if cur == None:
+        return None
+    else:
+        return cur['email']

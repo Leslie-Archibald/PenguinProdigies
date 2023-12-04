@@ -151,3 +151,9 @@ function joinAuction(postID){
     newPath = "/auction"+postID;
     location.assign(newPath);
 }
+
+function sendVerification(){
+    const request = new XMLHttpRequest();
+    request.open("POST", "/send-email");
+    request.send();
+}
