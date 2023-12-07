@@ -18,8 +18,8 @@ import bson
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-#client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+#client = MongoClient('mongo')
 conn = client['cse312']
 chat_collection = conn["chat"]
 likes_collection = conn["likes"]
@@ -34,6 +34,7 @@ socket = SocketIO(app)
 directory = directory = os.path.dirname(__file__)
 
 @app.route("/", methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def home():
     myResponse = make_response(render_template('index.html'))
     username = authentication.get_user(conn)
@@ -155,6 +156,7 @@ def logout():
 
 
 @app.route("/visit-counter")
+@app.route("/cookie-counter")
 def visits_Counter():
     cookieName = "visits"
     if cookieName in flask.request.cookies:
