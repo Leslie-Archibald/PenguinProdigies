@@ -93,7 +93,38 @@
                 <div class="chatDiv">
                    <div class="chat">
                         <div class="chatHistory" id="chatHistory">
-                            {{chatHistory}}
+                           <!-- dummy auctionpost for formatting stuff -->
+                            <!--  <div class="auctionPost">
+                                <hr>
+                                <b>Penguin for Sale!</b>
+                                <br />
+                                <img class="auctionImage" src="https://i.natgeofe.com/k/88de42b8-764c-40d2-89ee-e72d55dc95b8/emperor-penguin-chicks.jpg" />
+                                <p>Emperor penguin chicks</p>
+                                <p>Current highest bid: $600000000000000.00</p>
+                                <p>Current leader: APenguinStan </p>
+                                <p>Time Remaining: 30 seconds</p>
+                                <label for="makeBid">
+                                    <input id="makeBid" name="makeBid" type="text">
+                                </label>
+                                <button id="sendBid">Send</button>
+                                <hr>
+                            </div>
+     -->
+                            {% for item in auctionPosts %}
+                                <div class="auctionPost" id="{{item.id}}">
+                                    <hr>
+                                        <b>{{item.title}}</b><br />
+                                        <img class="auctionImage" src="{{item.image}}" width="100%" />
+                                        <p>{{item.description}}</p>
+                                        <p id="currBid">Current highest bid: {{item.bid}}</p>
+                                        <p id="currLeader">Current leader: {{item.winner}}</p>
+                                        <p id="timer">Ending Time: {{item.time}}</p>
+                                        <a href="/joinAuc/{{item.id}}">
+                                            <button id="sendBid">Join Auction</button>
+                                        </a>
+                                    <hr>
+                                </div>
+                            {% endfor %}
                         </div>
                    </div>
                 </div>

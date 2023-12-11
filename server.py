@@ -7,10 +7,15 @@ from bson.json_util import dumps, loads
 from flask_bcrypt import Bcrypt
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_socketio import SocketIO
+import asyncio
+import time
+
 import util.authentication as authentication
 import util.constants as constants
 from util.likes import *
 from util.auction import *
+import json
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
@@ -39,13 +44,17 @@ chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 auction_collection = conn[constants.DB_AUCTION]
 
+auctions_collection = conn["auctions"]
+#auctions_collection.insert_one({"auction owner":"coolUser","title":"coolTitle","auction id":1234,"duration":"5","starting bid":"50","winning bid":""})
+
+socket = SocketIO(app)
+
 limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
 
 directory = directory = os.path.dirname(__file__)
-#relative_Path = flask.Request.path
-#relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
 @app.route("/", methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def home():
     myResponse = make_response(render_template('index.html'))
     username = authentication.get_user(conn)
@@ -56,6 +65,19 @@ def home():
         myResponse = make_response(
             redirect(url_for('user_Home', user=username))
             )
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/html"
+    return myResponse
+@app.route("/joinAuc/<aucID>", methods=['GET', 'POST'])
+def auction(aucID):
+    item=getAucInfo(aucID,conn)
+    servTitle=item.get("title","Title not found")
+    servImg = item.get("image")
+    servDesc=item.get("description","Description not found")
+    servBid=item.get("bid","Highest bid could not be found")
+    servWinner=item.get("winner","")
+
+    myResponse = make_response(render_template('auctionBasic2.html', id=aucID, title=servTitle, image=servImg, description=servDesc, bid=servBid, winner=servWinner ) )
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/html"
     return myResponse
@@ -79,6 +101,12 @@ def form_css():
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
+@app.route('/joinAuc/auctionFunctions.js')
+def auctionFunctions_js():
+    myResponse = flask.send_from_directory('public','auctionFunctions.js')
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/javascript"
+    return myResponse
 @app.route('/profilestyles.css')
 def profile_css():
     myResponse = flask.send_from_directory('public', 'profilestyles.css')
@@ -86,7 +114,7 @@ def profile_css():
     myResponse.mimetype = "text/css"
     return myResponse
 
-
+@app.route("/joinAuc/functions.js")
 @app.route("/user/functions.js")
 @app.route("/functions.js")
 def home_js():
@@ -124,7 +152,6 @@ def register_Action():
         return render_template('errormsg.html', msg='This username is already taken', redirect='/')
     else:
         return myResponse
-
 @app.route("/login")
 def login():
     # myResponse = flask.send_from_directory("public", "login.html")
@@ -150,6 +177,7 @@ def logout():
 
 
 @app.route("/visit-counter")
+@app.route("/cookie-counter")
 def visits_Counter():
     cookieName = "visits"
     if cookieName in flask.request.cookies:
@@ -263,6 +291,95 @@ def verify_user():
     token = flask.request.cookies.get(cookieName)
     if flask.request.args.get('token') != token:
         return render_template('errormsg.html', msg='User unauthorized', redirect='/')
+@app.route('/joinAuc/<path:aucID>/submitBid', methods=["POST"])
+def submitBid(aucID):
+    user = authentication.get_user(conn)
+    auction = None
+    response = flask.make_response("Failed")
+    if(user != None):
+        auction = auction_collection.find_one({"auction id":aucID})
+        if(user == auction.get("auction_owner")):
+            response = flask.make_response("Cannot make a bid on your auction")
+            auction = None
+
+    if(auction != None):
+        currHighest = int(auction.get("bid","0"))
+        userBid = request.get_data().decode().split("=")[1].strip()
+        userBidInt = -1
+        try:
+            userBidInt = int(userBid)
+            if( (int(auction.get("timeSeconds")) - int(time.time()) ) <= 0):
+                response = flask.make_response("Auction Ended")
+            elif(int(userBid) > currHighest):
+                auction_collection.update_one({"auction id":aucID},{"$set":{"winner":user,"bid":userBid}})
+                response = flask.make_response("Successful")
+        except:
+            response = flask.make_response("Only enter whole numbers for your bids")
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.mimetype = "text/plain"
+
+    return response
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WebSocket Paths
+
+@socket.on("connect")
+def handleOpen():
+    socket.emit("connect","1")
+
+@socket.on("message")
+def handleMsg(msg):
+    socket.send(msg + " Also, LIGMA BAWLZ")
+
+def startTimer(auctionID):
+    #I dont think we need this
+    totTime = int(time.time())+15
+
+totTime = int(time.time()) + 60
+@socket.on("getTime")
+def giveTime():#auctionID
+    #totTime = auctions_collection.find_one({"auction id":auctionID})["end time"]
+    socket.emit('time-left',(totTime)-int(time.time()) )
+
+@socket.on("getInfo")
+def giveInfo(auctionID):
+    info = getAucInfo(auctionID,conn)
+    info["timeSeconds"] = str(int(info["timeSeconds"]) - int(time.time()))
+    sendInfo = "{"
+    for key in info.keys():
+        if(key == "_id"):
+            continue
+        value = info[key]
+        if(value == ""):
+            value = "None"
+        sendInfo += "\""+key+"\"" + ":"+"\""+value+"\""
+        sendInfo +=","
+    if(sendInfo[-1] == ","):
+        #print("removed trailing ,")
+        sendInfo = sendInfo[:-1]
+    sendInfo += "}"
+    #info = bson.decode(info)
+    #print("Sent info the client: ",sendInfo,"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    socket.emit("info-response",sendInfo)
+
+@socket.on("submitBid")
+def submitBid(data):
+    bidInfo = json.loads(data)
+    print(data,"##############################################")
+    print(bidInfo,"~~~~~~~~~~~~~~~~~~")
+    currHighest = auctions_collection.find_one({"auction id":bidInfo["aucID"]}).get("winning bid","0")
+    user = conn[constants.DB_USERS].find_one({"auth":bidInfo["auth"]})
+    if(user == None):
+        #invalid auth token, send client a "0"
+        socket.emit("bid-response","0")
+        return
+    
+    if(int(currHighest) < int(bidInfo["bidAmount"]) ):
+        #update the DB and send the client a "1"
+        socket.emit("bid-response","1")
+        #WORK HERE!!!
+        auction_collection.update_one({"auction id":bidInfo["aucID"]},{"$set":{"winner":user.get("username"),"bid":bidInfo["bidAmount"]}})
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     db = conn[constants.DB_USERS]
     db.update_one({'username': username}, {"$set": {'verified': True}})
@@ -273,4 +390,5 @@ def verify_user():
 
 
 if __name__ == "__main__":
-    app.run(debug=True,host="0.0.0.0",port=8080)
+    #app.run(debug=True,host="0.0.0.0",port=8080)
+    socket.run(app,host="0.0.0.0",port=8080,debug=True,allow_unsafe_werkzeug=True)

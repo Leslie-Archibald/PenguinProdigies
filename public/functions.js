@@ -145,7 +145,7 @@ function auctionMessageHTML(messageJSON){
 }
 
 function joinAuction(postID){
-    newPath = "/auction"+postID;
+    newPath = "/auction/"+postID;
     location.assign(newPath);
 }
 
