@@ -2,7 +2,7 @@ var sock;
 var timerID = null;
 var aucID = null;
 function joinAuction(){
-    sock = io.connect("ws://localhost:8080", { transports: ["websocket"] });
+    sock = io.connect("wss://localhost:8080", { transports: ["websocket"] });
     sock.on("message",(data)=>{
         console.log(data);
     });
