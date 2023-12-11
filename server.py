@@ -67,6 +67,10 @@ def user_Home(user):
         return render_template('errormsg.html', 
                                msg='token not found --invalid access')
 
+@app.route("/chat")
+def chat_load():
+    return render_template('chat.html') 
+
 @app.route("/style.css")
 def home_css():
     myResponse = flask.send_from_directory("public","style.css")
@@ -82,6 +86,13 @@ def form_css():
 @app.route('/profilestyles.css')
 def profile_css():
     myResponse = flask.send_from_directory('public', 'profilestyles.css')
+    myResponse.headers['X-Content-Type-Options'] = 'nosniff'
+    myResponse.mimetype = "text/css"
+    return myResponse
+
+@app.route('/chatstyles.css')
+def chat_css():
+    myResponse = flask.send_from_directory('public', 'chatstyles.css')
     myResponse.headers['X-Content-Type-Options'] = 'nosniff'
     myResponse.mimetype = "text/css"
     return myResponse
@@ -166,6 +177,7 @@ def visits_Counter():
     myResponse.mimetype = "text/plain; charset=utf-8"
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
+
 @app.route("/chat-message", methods = ['GET', "POST"])
 def message_response():
     if request.method == "POST":

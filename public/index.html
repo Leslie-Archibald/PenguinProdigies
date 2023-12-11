@@ -23,6 +23,7 @@
                         <br />
                         <span class="userText"> Welcome {{username}}</span>
                         <a class="navLink flexItem conditionalLink" href="/profile">{{username}}'s profile</a>
+                        <a class="navLink flexItem conditionalLink" href="/chat">chat</a>
                         {% else %}
                         <a class="navLink flexItem conditionalLink" href="/register">register</a>
                         <a class="navLink flexItem conditionalLink" href="/login">login</a>
@@ -74,20 +75,7 @@
                                 <input type="file" name="upload" id="itemFile">
                             </label>
                             <input type="submit" value="Post" id="formButton">
-                        </form>
-                        <br />
-                        <hr />
-                        <h3 class="formTitle">Send a Message</h3>
-                        <form id="chatForm"></form>
-                        <label for="titleBox" class="formLabels">Title:
-                            <input type="text" id="titleBox" name="titleBox">
-                        </label>
-                        <br />
-                        <label for="messageBox" class="formLabels"> Message:
-                            <input type="text" id="messageBox" name="messageBox">
-                        </label>
-                        <input type="submit" value="Post" id="formButton">
-                    </form>
+                        
                     </div>
                 </div>
                 <div class="chatDiv">

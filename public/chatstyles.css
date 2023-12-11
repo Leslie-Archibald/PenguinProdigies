@@ -1,0 +1,153 @@
+/* stylesheet for the chat page for 
+*  Penguin Prodigies CSE312 project
+*
+*  Authors: Leslie (lmarchib), Ryan (rjwu)
+*           Solomon (solomonr), Winston (wpeng2) 
+*/
+
+/* general full page styling */
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    background-color: lightblue;
+}
+
+/* flexbox setup */
+
+.flexbox{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.flexNavBar{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: start;
+}
+
+.flexBoxHor{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: start;
+    justify-content: space-around;
+}
+
+.flexItem{
+    align-self: auto;
+}
+
+/* Navbar styling */
+
+.banner {
+    width: 100%;
+    height: 15%;
+    position: fixed;
+    top: 0;
+    background-color: steelblue;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.navBar {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+}
+a.navLink{
+    font-size: 20px;
+    color: black;
+}
+
+h1#navTitle {
+    text-align: center;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    font-size: 30px;
+    color: black;
+    vertical-align: top;
+}
+
+.userText{
+    font-size: 20px;
+}
+
+.conditionalLink{
+    margin: 5px 5px 5px
+}
+
+/* page content styling */
+
+hr{
+    color: steelblue;
+}
+
+.pageContents{ 
+    width: auto;
+    height: auto;
+    max-height: 85%;
+    position: bottom;
+    margin-top: 7%;
+    padding: 20px;
+}
+
+.chatFormFrame{
+    background-color: steelblue;
+    width: 35%;
+    min-height: 550px;
+    height: 85%;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.chatForm{
+    background-color: whitesmoke;
+    min-height: 550px;
+    height: 100%;
+}
+
+.chatDiv{
+    float: right;
+    width: 60%;
+    height: 85%;
+    padding: 10px;
+    background-color: steelblue;
+}
+
+.chat{
+    background-color: whitesmoke;
+    min-height: 550px;
+}
+
+.chatHistory{
+    padding: 10px;
+    min-height: 450px;
+}
+
+.button{
+    text-align: center;
+    color: black;
+    background-color: gainsboro;
+    font-size: 16px;
+}
+
+/* form styling */
+h3{
+    padding-bottom: 10px;
+    font-size: 24px;
+}
+
+.formLabels{
+    font-size: 20px;
+}
