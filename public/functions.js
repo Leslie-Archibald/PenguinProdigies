@@ -113,6 +113,9 @@ function sendAuction(){
         }
     }
 
+    // TODO: get and attach file information to post request 
+
+
     // username = auction creator, id = post id
     const username = document.getElementById('userid').innerText;
     const id = this.crypto.randomUUID();
@@ -145,76 +148,8 @@ function auctionMessageHTML(messageJSON){
 }
 
 function joinAuction(postID){
-    newPath = "/auction"+postID;
+    newPath = "/auction/"+postID;
     location.assign(newPath);
 }
-
-// todo: write create auc display to call the various parts of messagejson 
-
-function createAucDisplay(){
-    document.getElementById("reationTitle").style.color = "pink";
-    createJSON = createdHistory("creationHistory");
-    wonJSON = wonHistory("winHistory");
-}
-
-function createdHistory(divID){
-    const request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-        if (this.onreadystatechange == 4 && this.status == 200){
-            const messages = JSON.parse(this.response);
-            for (const message of messages) {
-                addAucToHistory(message, divID); 
-            }
-        }
-    }
-    request.open("GET", "/create-history");
-    request.send();
-}
-
-function wonHistory(divID){
-    const request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-        if (this.onreadystatechange == 4 && this.status == 200){
-            const messages = JSON.parse(this.response);
-            for (const message of messages) {
-                addAucToHistory(message, divID); 
-            }
-        }
-    }
-    request.open("GET", "/win-history");
-    request.send();
-}
-
-function addAucToHistory(messageJSON, divID){
-    const aucHistory = document.getElementById(divID)
-    aucHistory.innerHTML += profileAucHTML(messageJSON)
-    aucHistory.scrollIntoView(false)
-    aucHistory.scrollTop = aucHistory.scrollHeight - aucHistory.clientHeight
-}
-
-function profileAucHTML(messageJSON){
-    const creator = messageJSON["auction owner"];
-    const winner = messageJSON["winner"];
-    const title = messageJSON["title"];
-    const description = messageJSON["description"];
-    const imagePath = messageJSON["image"];
-    const winningBid = messageJSON["winning bid"];
-
-    let aucHTML = "<div> <hr />";
-    aucHTML += "<h4>" + title + "</h4> <br />"
-    aucHTML += "<img src='"+ imagePath + "'class='profileImg' /><br />"
-    aucHTML += "<b><p>Sold by: </b>" + creator + "</p>"
-    aucHTML += "<b><p>Won by: </b>"+ winner + "</p>"
-    aucHTML += "<b><p>Winning Bid: </b>$" + winningBid + "</p>"
-    aucHTML += "<b><p>Description: </b>" + description + "</p>"
-    aucHTML += "</div>";
-
-    return aucHTML
-
-}
-    
-function sendVerification(){
-    const request = new XMLHttpRequest();
-    request.open("POST", "/send-email");
-    request.send();
-}
+    //return auctionHTML;
+//}   
