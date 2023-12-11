@@ -11,6 +11,9 @@
         <title>Super Epic CSE312 Webpage</title>
         <link rel="stylesheet" href="/style.css" type="text/css">
     </head>
+
+    <body onload="welcome();"></body>
+
     <body class="flexBox" onload="createLink();">
         <div class="flexBox"></div>
             <div class="banner flexBox">
@@ -86,7 +89,7 @@
                         <label for="messageBox" class="formLabels"> Message:
                             <input type="text" id="messageBox" name="messageBox">
                         </label>
-                        <input type="submit" value="Post" id="formButton">
+                        <input type="submit" value="Post" id="formButton" onclick="sendPost()">
                     </form>
                     </div>
                 </div>

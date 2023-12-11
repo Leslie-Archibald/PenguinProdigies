@@ -13,8 +13,8 @@ from util.auction import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+# client = MongoClient('mongo')
 from util.auction import * 
 from util.profile import *
 from util.likes import *
@@ -164,9 +164,10 @@ def visits_Counter():
     myResponse.mimetype = "text/plain; charset=utf-8"
     myResponse.set_cookie(cookieName,value,max_age=3600)#3600 is 1 hour!
     return myResponse
-@app.route("/chat-message", methods = ['GET', "POST"])
+@app.route("/chat-message", methods =["POST"])
 def message_response():
     if request.method == "POST":
+        print("hi")
         myResponse = flask.make_response("Message Received")
         myResponse.headers['X-Content-Type-Options'] = 'nosniff'
         myResponse.mimetype = "text/plain; charset=utf-8"
@@ -184,6 +185,10 @@ def message_response():
         title = title.replace("<", "&lt;")
         title = title.replace(">", "&gt;")
         data["title"] = title
+
+        user = authentication.get_user(conn)
+        if user != None:
+            data["username"] = user
         
         chat_collection.insert_one(data)
         print(data)

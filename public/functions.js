@@ -51,7 +51,7 @@ function sendPost() {
     const descriptionTextBox = document.getElementById("messageBox");
     const description = descriptionTextBox.value;
     descriptionTextBox.value = "";
-    const username = document.getElementById('userid').innerText;
+    const username = "Guest";
     const id = this.crypto.randomUUID();
     const messageJSON = {"title": title, "username": username, "description": description, "id": id};
     const request = new XMLHttpRequest();
