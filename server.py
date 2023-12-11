@@ -14,8 +14,8 @@ from util.auction import *
 
 app = Flask(__name__, template_folder='public')
 bcrypt = Bcrypt(app)
-# client = MongoClient('localhost')
-client = MongoClient('mongo')
+client = MongoClient('localhost')
+# client = MongoClient('mongo')
 from util.auction import * 
 from util.profile import *
 from util.likes import *
@@ -39,12 +39,14 @@ chat_collection = conn["chat"]
 likes_collection = conn["likes"]
 auction_collection = conn[constants.DB_AUCTION]
 
-limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
+# limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["50/10seconds"], storage_uri="memory://")
+# limiter = Limiter(app=app, key_func=get_remote_address, default_limits=["30/10seconds"], storage_uri="mongodb://localhost:27017", strategy="fixed-window")
 
 directory = directory = os.path.dirname(__file__)
 #relative_Path = flask.Request.path
 #relative_Path = relative_Path.strip("/")#removes leading "/" so that the paths will be joined properly
 
+# @limiter.limit("1/second", override_defaults=False)
 @app.route("/", methods=['GET', 'POST'])
 def home():
     myResponse = make_response(render_template('index.html'))
@@ -246,7 +248,7 @@ def send_email():
     response = make_response(render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=authentication.is_verified(username, conn)))
     cookieName = constants.COOKIE_AUTH_TOKEN
     token = flask.request.cookies.get(cookieName)
-    link = "http://localhost:8080/email-verification" + '?token=' + token 
+    link = "https://penguinprodigies.works/email-verification" + '?token=' + token 
     msg = Message('Email Verification', sender=os.environ.get('MAIL_USERNAME')+"@gmail.com", recipients=[authentication.get_email(conn, username)])
     msg.body = link
     mail.send(msg)
@@ -270,6 +272,10 @@ def verify_user():
     wonAuctions = display_winners(conn, username)
     response = make_response(render_template('profile.html', username=username, createdAuction=createdAuctions, wonAuctions=wonAuctions, verified=authentication.is_verified(username, conn)))
     return redirect('/profile',307,response)
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return "You have exceeded your rate-limit"
 
 
 if __name__ == "__main__":

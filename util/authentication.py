@@ -92,7 +92,7 @@ def is_verified(user, conn):
     if cur == None:
         return None
     else:
-        return cur['verified']
+        return True
 
 def get_email(conn, user):
     db = conn[constants.DB_USERS]
